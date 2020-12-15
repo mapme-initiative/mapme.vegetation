@@ -78,9 +78,12 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><strong>Tools for downloading and processing Sentinel-2 L1C datasets for forest monitoring</strong></p>
-<p>This package is a collection of functions used to download, pre-process and conduct analysis of Sentinel-2 L1C data in the process of de- / afforestation monitoring and planning. Data is downloaded from a public data bucket at GoogelCloud. Users thus need a valid Google account to be able to download the package. Additionally gsutils needs to be installed. Installation instructions can be found <a href="https://cloud.google.com/storage/docs/gsutil_install">here</a>. The package provides functionality for cloud masking, calculation of a high number of vegetation indices, and spatio-temporal aggregations suiting different user needs. Under the hood the R package <a href="https://github.com/appelmar/gdalcubes_R">gdalcubes</a> provides comprehensive and highly-efficient utilities for image warping and pixel-based calculations. Finally, the common zonal statistics can be calculated for polygons across the time-dimension of the input raster files.</p>
-<p><strong>Usage</strong></p>
+<p><img src="https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg" alt="check"></p>
+<p><strong>About</strong></p>
+<p>This package is a collection of functions used to download, pre-process and conduct analysis of Sentinel-2 L1C data in the process of de- / afforestation monitoring and planning. Data is downloaded from a public data bucket at GoogelCloud. Users thus need a valid Google account to be able to download the package. Additionally gsutils needs to be installed on your machine. Installation instructions can be found <a href="https://cloud.google.com/storage/docs/gsutil_install">here</a>. The package provides functionality for cloud masking, calculation of a high number of vegetation indices, and spatio-temporal aggregations suiting different user needs. Under the hood the R package <a href="https://github.com/appelmar/gdalcubes_R">gdalcubes</a> provides comprehensive and highly-efficient utilities for image warping and pixel-based calculations. Finally, common zonal statistics can be calculated for polygons across the time-dimension of the input raster files.</p>
+<p><strong>Tutorial</strong></p>
+<p>The tutorial for the usage of the <strong>mapme.vegetation package</strong> can be found <a href="https://mapme-initiative.github.io/mapme.vegetation/">here</a>. Please visit this page in order to get to know the API of mapme.vegetation.</p>
+<p><strong>Installation</strong></p>
 <p>In our installation instruction we assume that you are going to use R Studio as an IDE. You need to have some software pre-installed software to be able to install the sen2tool package.</p>
 <ul>
 <li>download and install R &gt;= 3.5.x from <a href="https://cran.rstudio.com/" class="uri">https://cran.rstudio.com/</a>
@@ -90,11 +93,11 @@
 <li>download and install Rtools from <a href="https://cran.r-project.org/bin/windows/Rtools" class="uri">https://cran.r-project.org/bin/windows/Rtools</a> and make Rtools available on the PATH variable</li>
 <li>install the devtools and git2r packages with ‘install.packages(c(“devtools”, “git2r”))’</li>
 </ul>
-<p>This package can be installed directly by using the <code>devtools</code> package by entering the following command:</p>
-<p><code>devtools::install_github("openkfw/mapme.vegetation")</code></p>
+<p>This package can be installed directly by using the <code>remotes</code> package by entering the following command:</p>
+<p><code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("mapme-initiative/mapme.vegetation")</a></code></p>
 <p>Additionally, we ship this package with a Dockerfile which can be used to run the packages and its dependencies as a container. When <code>cd</code>ing into the repository, building and running the image is as simple as:</p>
 <p><code>docker build -t mapmeVegetation:latest .</code></p>
-<p><code>docker run -d -p 8787:8787 -e USER=myuser -e PASSWORD=mypassword gans-sentinel</code></p>
+<p><code>docker run -d -p 8787:8787 -e USER=myuser -e PASSWORD=mypassword mapmeVegetation</code></p>
 <p><strong>gsutil</strong></p>
 <p>It is <strong>not</strong> possible to download any data without a login to a valid Google account in advance. Follow the instructions outlined here:</p>
 <ul>
