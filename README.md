@@ -2,7 +2,7 @@
 
 
 <!-- badges: start -->
-![check](https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg)
+![check](https://github.com/mapme-initiative/mapme.vegetation/workflows/R-CMD-check/badge.svg)
 <!-- badges: end -->
 
 ## About
