@@ -8,6 +8,13 @@
 
 <title>Cloud Mask raster for Sentinel 2 L1C — createCloudMask • mapme.vegetation</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -46,6 +53,7 @@ A GTiff file called &amp;lt;tile-id&amp;gt;_CM.tif
 is written to GRANULE/&amp;lt;tile-id&amp;gt;/IMG_DATA in 60m resolution. A value
 of 1 indicates the presence of a cloud while a value of 0 represents
 clear sky conditions according to the cloud product." />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -112,7 +120,12 @@ clear sky conditions according to the cloud product." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/mapme-initiative/mapme.vegetation">
+    <span class="fas fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -184,7 +197,7 @@ mask raster should be overwritten. Defaults to <code>TRUE</code></p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by KfW Bankengruppe, Darius Görgen, Fabian Löw.</p>
+  <p>Developed by <a href='https://www.kfw-entwicklungsbank.de/International-financing/KfW-Entwicklungsbank/'>KfW Bankengruppe</a>, <a href='http://dariusgoergen.com/'>Darius Görgen</a>, <a href='https://maptailor.net/'>Fabian Löw</a>.</p>
 </div>
 
 <div class="pkgdown">
