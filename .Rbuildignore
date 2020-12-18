@@ -14,3 +14,4 @@
 ^.*\.pdf
 ^LICENSE\.md$
 ^\.github$
+^assets$
