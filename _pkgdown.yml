@@ -1,12 +1,27 @@
 home:
   title: An R package for afforestation analysis
   description: This package let's you download and process Sentinel-2 L1C data in a fast and convinient way to monitor afforestation.
-
+  links:
+  - text: Learn more about MAPME
+    href: https://mapme-initiative.org/
+  - text: Read the Open Source Guide
+    href: https://github.com/mapme-initiative/mapme.osg
+  - text: Browse source code
+    href: https://github.com/mapme-initiative/mapme.vegetation
+  - text: File an issue
+    href: https://github.com/mapme-initiative/mapme.vegetation/issues
 destination: docs
 
+navbar:
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/mapme-initiative/mapme.vegetation
+
 authors:
-  MapTailor GbR:
+  Darius Görgen:
+    href: http://dariusgoergen.com/
+  Fabian Löw:
     href: https://maptailor.net/
-  Financed by KfW Development Bank:
+  KfW Bankengruppe:
     href: https://www.kfw-entwicklungsbank.de/International-financing/KfW-Entwicklungsbank/
 

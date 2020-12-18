@@ -1,4 +1,4 @@
-# mapme.vegetation <img src='man/figures/mapme-logo.png' align="right" height="138.5" />
+# mapme.vegetation <img src='man/figures/logo.png' align="right" height="110"  />
 
 
 <!-- badges: start -->
