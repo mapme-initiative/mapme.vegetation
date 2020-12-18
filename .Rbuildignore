@@ -12,5 +12,5 @@
 ^.Rhistory$
 ^init_grass.sh$
 ^.*\.pdf
-^LICENSE\.md$
+^LICENSE$
 ^\.github$

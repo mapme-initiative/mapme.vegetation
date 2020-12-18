@@ -1,17 +1,20 @@
-![mapme-logo](https://github.com/mapme-initiative/mapme-website/blob/main/assets/mapme-logo.png)
+# mapme.vegetation <img src='man/figures/mapme-logo.png' align="right" height="138.5" />
 
+
+<!-- badges: start -->
 ![check](https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg)
+<!-- badges: end -->
 
-**About**
+## About
 
 This package is a collection of functions used to download, pre-process and conduct analysis of Sentinel-2 L1C data in the process of de- / afforestation monitoring and planning. Data is downloaded from a public data bucket at GoogelCloud. Users thus need a valid Google account to be able to download the package. Additionally gsutils needs to be installed on your machine. Installation instructions can be found [here](https://cloud.google.com/storage/docs/gsutil_install). The package provides functionality for cloud masking, calculation of a high number of vegetation indices,  and spatio-temporal aggregations suiting different user needs. Under the hood the R package [gdalcubes](https://github.com/appelmar/gdalcubes_R) provides comprehensive and highly-efficient utilities for image warping and pixel-based calculations. Finally, common zonal statistics can be calculated for polygons across the time-dimension of the input raster files. 
 
-**Tutorial**
+## Tutorial
 
 The tutorial for the usage of the **mapme.vegetation package** can be found [here](https://mapme-initiative.github.io/mapme.vegetation/). Please visit
 this page in order to get to know the API of mapme.vegetation.
 
-**Installation**
+## Installation
 
 In our installation instruction we assume that you are going to use R Studio as an IDE. You need to have some software pre-installed software to be able to install the sen2tool package.
 
@@ -32,7 +35,7 @@ Additionally, we ship this package with a Dockerfile which can be used to run th
 
 
 
-**gsutil**
+## gsutil
 
 It is **not** possible to download any data without a login to a valid Google account in advance. Follow the instructions outlined here:
 
@@ -42,7 +45,7 @@ It is **not** possible to download any data without a login to a valid Google ac
 - start downloading data afterwards
 
 
-**Note**
+## Note
 
 When using the provided Dockerfile to run the package in an container users might run into issues concerning write permissions to directories. In the case a user does not have permission to write into a specified folder the Download will fail. In these cases the users should contact their administrator for writting permissions or log into the container as a root user and change the permissions manually:
 
