@@ -1,4 +1,4 @@
-![mapme-logo](assets/mapme-logo.png)
+![mapme-logo](https://github.com/mapme-initiative/mapme-website/blob/main/assets/mapme-logo.png)
 
 ![check](https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg)
 
