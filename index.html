@@ -77,14 +77,25 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
-<p><img src="https://github.com/mapme-initiative/mapme-website/blob/main/assets/mapme-logo.png" alt="mapme-logo"></p>
-<p><img src="https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg" alt="check"></p>
-<p><strong>About</strong></p>
+<div id="mapmevegetation-" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#mapmevegetation-" class="anchor"></a>mapme.vegetation <img src="reference/figures/mapme-logo.png" align="right" height="138.5">
+</h1></div>
+<!-- badges: start -->
+<p><img src="https://github.com/mapme-initiative/mapme.forest/workflows/R-CMD-check/badge.svg" alt="check"><!-- badges: end --></p>
+<div id="about" class="section level2">
+<h2 class="hasAnchor">
+<a href="#about" class="anchor"></a>About</h2>
 <p>This package is a collection of functions used to download, pre-process and conduct analysis of Sentinel-2 L1C data in the process of de- / afforestation monitoring and planning. Data is downloaded from a public data bucket at GoogelCloud. Users thus need a valid Google account to be able to download the package. Additionally gsutils needs to be installed on your machine. Installation instructions can be found <a href="https://cloud.google.com/storage/docs/gsutil_install">here</a>. The package provides functionality for cloud masking, calculation of a high number of vegetation indices, and spatio-temporal aggregations suiting different user needs. Under the hood the R package <a href="https://github.com/appelmar/gdalcubes_R">gdalcubes</a> provides comprehensive and highly-efficient utilities for image warping and pixel-based calculations. Finally, common zonal statistics can be calculated for polygons across the time-dimension of the input raster files.</p>
-<p><strong>Tutorial</strong></p>
+</div>
+<div id="tutorial" class="section level2">
+<h2 class="hasAnchor">
+<a href="#tutorial" class="anchor"></a>Tutorial</h2>
 <p>The tutorial for the usage of the <strong>mapme.vegetation package</strong> can be found <a href="https://mapme-initiative.github.io/mapme.vegetation/">here</a>. Please visit this page in order to get to know the API of mapme.vegetation.</p>
-<p><strong>Installation</strong></p>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>In our installation instruction we assume that you are going to use R Studio as an IDE. You need to have some software pre-installed software to be able to install the sen2tool package.</p>
 <ul>
 <li>download and install R &gt;= 3.5.x from <a href="https://cran.rstudio.com/" class="uri">https://cran.rstudio.com/</a>
@@ -99,7 +110,10 @@
 <p>Additionally, we ship this package with a Dockerfile which can be used to run the packages and its dependencies as a container. When <code>cd</code>ing into the repository, building and running the image is as simple as:</p>
 <p><code>docker build -t mapmeVegetation:latest .</code></p>
 <p><code>docker run -d -p 8787:8787 -e USER=myuser -e PASSWORD=mypassword mapmeVegetation</code></p>
-<p><strong>gsutil</strong></p>
+</div>
+<div id="gsutil" class="section level2">
+<h2 class="hasAnchor">
+<a href="#gsutil" class="anchor"></a>gsutil</h2>
 <p>It is <strong>not</strong> possible to download any data without a login to a valid Google account in advance. Follow the instructions outlined here:</p>
 <ul>
 <li>run <code>bash  gcloud init</code> from the terminal in R Studio</li>
@@ -107,12 +121,16 @@
 <li>create a new project ID or change to an already existing one</li>
 <li>start downloading data afterwards</li>
 </ul>
-<p><strong>Note</strong></p>
+</div>
+<div id="note" class="section level2">
+<h2 class="hasAnchor">
+<a href="#note" class="anchor"></a>Note</h2>
 <p>When using the provided Dockerfile to run the package in an container users might run into issues concerning write permissions to directories. In the case a user does not have permission to write into a specified folder the Download will fail. In these cases the users should contact their administrator for writting permissions or log into the container as a root user and change the permissions manually:</p>
 <p><code>docker exect -it &lt;container_name&gt; bash</code></p>
 <p>followed by:</p>
 <p><code>chmod u+w &lt;directory&gt;</code></p>
-
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
