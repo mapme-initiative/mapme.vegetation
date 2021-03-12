@@ -106,17 +106,17 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="co">#&gt; Linking to GEOS 3.8.1, GDAL 3.1.4, PROJ 6.3.1</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://rgdal.r-forge.r-project.org">rgdal</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: sp</span>
-<span class="co">#&gt; rgdal: version: 1.5-18, (SVN revision 1082)</span>
+<span class="co">#&gt; rgdal: version: 1.5-23, (SVN revision 1121)</span>
 <span class="co">#&gt; Geospatial Data Abstraction Library extensions to R successfully loaded</span>
 <span class="co">#&gt; Loaded GDAL runtime: GDAL 3.1.4, released 2020/10/20</span>
 <span class="co">#&gt; Path to GDAL shared files: /Users/runner/work/_temp/Library/sf/gdal</span>
 <span class="co">#&gt; GDAL binary built with GEOS: TRUE </span>
 <span class="co">#&gt; Loaded PROJ runtime: Rel. 6.3.1, February 10th, 2020, [PJ_VERSION: 631]</span>
 <span class="co">#&gt; Path to PROJ shared files: /Users/runner/work/_temp/Library/gdalcubes/proj</span>
-<span class="co">#&gt; Linking to sp version:1.4-4</span>
+<span class="co">#&gt; Linking to sp version:1.4-5</span>
 <span class="co">#&gt; To mute warnings of possible GDAL/OSR exportToProj4() degradation,</span>
 <span class="co">#&gt; use options("rgdal_show_exportToProj4_warnings"="none") before loading rgdal.</span>
 <span class="co">#&gt; Overwritten PROJ_LIB was /Users/runner/work/_temp/Library/gdalcubes/proj</span></code></pre></div>
@@ -177,7 +177,7 @@
 <span class="co">#&gt; 10  2.024260e-60 0.0030694922 0.05540300 10 MULTIPOLYGON (((308587.3 38...</span></code></pre></div>
 <p>To do some basic analysis to compare different timesteps we are going to use a simple ggplot2 boxplot and we are reshaping our data to a truly long format beforehand.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co">#&gt; </span>
@@ -217,7 +217,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.kfw-entwicklungsbank.de/International-financing/KfW-Entwicklungsbank/">KfW Bankengruppe</a>, <a href="http://dariusgoergen.com/">Darius Görgen</a>, <a href="https://maptailor.net/">Fabian Löw</a>.</p>
+  <p>Developed by <a href="https://mapme-initiative.org/">MAPME-Initiative</a>, <a href="http://dariusgoergen.com/">Darius Görgen</a>, <a href="https://maptailor.net/">Fabian Löw</a>.</p>
 </div>
 
 <div class="pkgdown">
