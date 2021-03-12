@@ -49,11 +49,11 @@
 #'   by extent and timewindow and possibly also footprint check.
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 #'
@@ -211,11 +211,11 @@ downloadS2 <- function(aoi = NULL,
 #' @importFrom stringr str_split
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 createCloudMask <- function(safe, overwrite = T){
@@ -321,11 +321,11 @@ createCloudMask <- function(safe, overwrite = T){
 #' @importFrom magrittr %>%
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 cube_indexcalc <- function(safes,
@@ -411,11 +411,11 @@ cube_indexcalc <- function(safes,
 #' @importFrom magrittr %>%
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 calcZS <- function(aoi, idcol, rasterfiles, dates, band_name, zonalstat,
@@ -488,11 +488,11 @@ calcZS <- function(aoi, idcol, rasterfiles, dates, band_name, zonalstat,
 #' @importFrom stringr str_sub
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 calcIndex <-  function(safes,
@@ -552,11 +552,11 @@ calcIndex <-  function(safes,
 #' check_indices()[1:10,]
 #' @author Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 #' \cr
-#' \emph{Maintainer:} KfW FZ Evaluierung \email{FZ-Evaluierung@kfw.de}
+#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 #' \cr
 #' \emph{Contact Person:} Dr. Johannes Schielein
 #' \cr
-#' \emph{Copyright:} KfW Bankengruppe
+#' \emph{Copyright:} MAPME-Initiative
 #' \cr
 #' \emph{License:} GPL-3
 check_indices <- function(){
