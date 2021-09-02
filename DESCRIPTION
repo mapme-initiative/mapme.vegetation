@@ -1,0 +1,45 @@
+Package: mapme.vegetation
+Title: Tool chain for Sentinel-2 L2A processing
+Version: 0.0.0.9000
+Authors@R: c(person("MAPME-Initiative", role = c("cre", "cph"), email = "contact@mapme-initiative.org"),
+             person(given = "Darius", family = "Görgen", role = "aut", email = "darius.goergen@maptailor.net"))
+Maintainer: MAPME-Initiative <contact@mapme-initiative.org>
+Description: This package allows an easy access to Sentinel-2 Level 2A data
+     from the freely available Amazon AWS bucket and subsequent processing based on the 
+     the datacube framework provided by gdalcubes. A total number of 206 vegetation 
+     indices as well as the surface reflectance values can be calculated for a 
+     regular time series. It supports the extraction of zonal statistcs for polygons to be 
+     directly used in project evaluation or subsequent modelling tasks. 
+     The package is part of the MAPME toolset at <https://github.com/mapme-initiative> 
+     and was developed by MapTailor Geospatial Consulting <https://maptailor.net/>.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.5)
+Imports: gdalcubes,
+         sf,
+         rgdal,
+         stars,
+         stringr,
+         R.utils,
+         dplyr,
+         magrittr,
+         rstac,
+         signal,
+         trend,
+         zoo,
+         assertthat,
+         terra,
+         doSNOW,
+         foreach,
+         link2GI,
+         rgrass7,
+         snow
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    ggplot2,
+    tidyr,
+    DiagrammeR
+VignetteBuilder: knitr

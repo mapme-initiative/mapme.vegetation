@@ -1,0 +1,185 @@
+---
+title: "Calculate Indices"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculate Indices}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Setup 
+
+```{r setup, warnings = FALSE}
+library(mapme.vegetation)
+library(sf)
+library(terra)
+```
+
+
+## Available Indices
+
+In this vignette `mapme.vegetation` functionality to derive a dense time series
+of vegetation indices is presented. The package comes with a list of over 100
+indices that can be calculated for Sentinel 2. Issue the following command
+to inspect available indices.
+
+
+```{r}
+head(check_indices())
+```
+
+## Calculate Indices
+
+In order to specify one or multiple indices refer to the short name found in the
+column `name`. As a prerequisite for calculating indices we assume that S2 data
+for a given spatio-temporal AOI has been downloaded as explained in the vignette xx.
+Additionally, we assume that the SCL has been enriched using the functionality
+explained in the vignette xx. It is however possible to skip the cloud mask
+buffering and proceed with the original SCL files.
+First, let's read in the necessary files and declare some arguments for the
+index calculation.
+
+```{r}
+s2_files = list.files(system.file("extdata/s2a", package = "mapme.vegetation"), ".tif", full.names = T)
+scl_files = list.files(system.file("extdata/scl", package = "mapme.vegetation"), ".tif", full.names = T)
+aoi = st_read(system.file("extdata", "exp_region_wgs.gpkg", package = "mapme.vegetation"), quiet = T)
+aoi_utm = st_transform(aoi, st_crs(32638))
+bbox = st_bbox(aoi_utm)
+
+dx = 200 # desired outcome resolution in x direction
+dy = 200 # desired outcome resolution in y direction
+dt = "P14D" # desired temporal resolution - here 1 month
+srs = "EPSG:32638" # desired CRS of the outcome raster - bbox must be specified in that crs
+after = "2017-05-01" # start date
+before = "2017-07-31" # end date
+index = "NDVI" # index to calculate, can specify multiple indices
+aggregation = "max" # aggregation method for scene within the same time step
+resampling = "cubic" # GDAL resampling method to match the outcome grid size
+outdir = "../inst/extdata/ndvi" # output directory
+label = "NDVI-" # appended to filename
+mask_layer = "SCL" # which band in the data cube is used as mask
+mask_values = 1 # which values to mask out
+mask_invert = F # logical if mask_values should be masked (TRUE) or kept (FALSE)
+```
+
+
+With this prerequisites we can nearly start to calculate the NDVI. Note, however,
+that we set the `mask_value = 1` to account for our enriched cloud mask. That is
+why we should exchange the original SCL files with our new SCL files.
+
+```{r}
+s2_files = s2_files[-grep("SCL", s2_files)]
+s2_files = c(s2_files, scl_files)
+```
+
+Now we can start calculating the index. We will use a collection definition which
+comes with the `mapme.vegetation` package to let `gdalcubes` how to interpret the
+filenames from AWS. That way, we are sure that the spatio-temporal extent of
+each single file is rightly interpreted.
+
+```{r}
+raw_ndvi = index_cube(files = s2_files, 
+                      format = system.file("sentinel2_l2a_cog.json", package = "mapme.vegetation"), 
+                      dx = dx, 
+                      dy = dy, 
+                      dt = dt, 
+                      srs = srs, 
+                      bbox = bbox, 
+                      after = after, 
+                      before = before, 
+                      aggregation = aggregation, 
+                      resampling = resampling, 
+                      index = index, 
+                      label = label, 
+                      outdir = outdir, 
+                      overwrite = TRUE,
+                      mask_layer = mask_layer, 
+                      mask_values = mask_values,
+                      mask_invert = mask_invert,
+                      creation_options = list("COMPRESS" = "DEFLATE"))
+```
+
+Let's inspect the returned output. It is a list with three objects. The first 
+object is called `files` and contains the path to the files. The second object 
+is called `band_order` and indicates the names and order of the bands in the 
+output files. This can be very important when multiple indices are calculated
+at once because `gdalcubes` will return the bands in alphabetical order.
+The last object is called `time` and indicates the timestamp for each of the 
+output files. Together this information can be used for subsequent processing.
+
+```{r}
+str(raw_ndvi)
+```
+
+Let's visualize the NDVI raster files.
+
+```{r}
+ndvi_ras = rast(raw_ndvi$files)
+plot(ndvi_ras)
+
+```
+
+We see that we have some missing values during the first 14 day period of May 
+as well as more extensive missing values for the period starting of May, 29th.
+Note that in the original resolution it is likely that there are more missing values.
+In order to be able to ship the example data sets with the package, the spatial
+resolution has been resampled to 100 meters, which is a reduction in spatial
+resolution of factor 10 for the band 4 and 8 that are used for the NDVI calculation.
+However, due to cloud cover, missing observations are actually quite frequent.
+The `mapme.vegetation` package offers functionality for to apply interpolation of
+missing values and smoothing of the resulting time series. 
+
+## Smoothing a Time Series
+
+The default functionality is quite basic, applying linear interpolation and 
+applying a Savitzkiy-Golay filter. In case you need a more sophisticated gap-filling
+strategy you can define your own function. The function receives the time series 
+of each pixel and is expected to return the same number of pixels. Let's 
+consider the smoothing with the basic approach. We will set the chunking option to 
+simultaneously process all 7 time-steps of our spatio-temporal extent. This is 
+important so that the complete time series is available.
+
+```{r}
+
+fill_ndvi = smooth_cube(files = raw_ndvi$files,
+                        bands = raw_ndvi$band_order, 
+                        times = raw_ndvi$time,
+                        dx = dx, 
+                        dy = dy, 
+                        dt = dt, 
+                        srs = srs, 
+                        after = after, 
+                        before = before, 
+                        bbox = bbox, 
+                        aggregation = aggregation, 
+                        resampling = resampling, 
+                        outdir = "../inst/extdata/filled/", 
+                        label = label,
+                        overwrite = TRUE,
+                        chunking = c(7,100,100),
+                        creation_options = list("COMPRESS" = "DEFLATE"))
+```
+
+Let's visualize the resulting gap filled and smoothed raster files. We see that the 
+missing values have been filled. Whether or not the default smoothing function 
+is suitable for your use case is a question you have to answer for yourself.
+In the example section of `mapme.vegetation::smooth_cube` you will find the 
+default. You can exchange that function by specifying a custom function with the
+`smoothing_function` argument. 
+
+```{r}
+ndvi_ras2 = rast(fill_ndvi$files)
+plot(ndvi_ras2)
+```
+
+
+

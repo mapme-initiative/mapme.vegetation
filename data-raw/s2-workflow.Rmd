@@ -1,0 +1,410 @@
+---
+title: "S2-Workflow"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This document describes the process to retrieve a dense time series of 
+vegetation indices based on S2 data. It is meant as a practical showcase
+for the functionality of downloading, spatio-temporal aggregation and calculation
+of indices implemented in the `mapme.vegetation` package. While a lot of common
+tasks are implemented to work almost automatically based on few user inputs, it 
+is important to realize how these routines work together to achieve the overall
+aim of a remote sensing project. For example, the exact behavior of the 
+temporal aggregation of remote sensing data depends on the project needs. It is 
+important that users familiarize themselves with the package's functionality so 
+that they can adapt custom solutions for their own projects. 
+
+## Getting Started
+
+In this document we will use as an area of interest (AOI) a number of polygons
+located in Pakistan that is shipped together with the source code of this package.
+That way, the R Markdown file used to process this vignette can be used as a 
+starting point for new users to follow the workflow on their own machine. 
+
+The first step is to make sure that the `mapme.vegetation` package is properly 
+installed. Issuing the following command in your R session should install the 
+necessary R dependencies for the package to work.
+
+```{r install-mapme, eval = F}
+
+if(!"devtools" %in% installed.packages()[,2]){
+  install.packages("devtools")
+}
+devtools::install_github("mapme-initiative/mapme.vegetation", dependencies = TRUE)
+
+```
+
+Since the successful use of the package will also depend on some functionality
+from other packages, after the installation we will load necessary pacakges in
+our R session. These packages should have been installed during the function
+call above. However, if loading a package via `library(pkg)` should fail install
+them explicitly via `install.package("pkg")`.
+
+```{r load-libs, warning=F, message=F}
+
+library(mapme.vegetation)
+library(sf)       # operations on vector data
+library(terra)    # operations on raster data
+library(stringr)  # operations on strings
+library(dplyr)    # tidyverse tabular data management
+library(magrittr) # tidyverse pipe implementation
+library(zoo)
+library(ggplot2)
+library(signal)
+library(tidyr)
+library(bfast)
+
+```
+
+## Loading the AOI
+
+As mentioned above, we will use an AOI that is shipped with the `mapme.vegetation`
+package. To load it as an sf-object into the current session we query for the
+local path to the package installation.
+
+```{r load-aoi}
+
+aoi = st_read(system.file("extdata", "testregion.gpkg", package = "mapme.vegetation"))
+aoi = st_read("../../Somaliland/SV1-02_20190814_L2A0000907559_1012000650010001_01.shp")
+```
+
+## Downloading S2 L2A data
+
+We will proceed with downloading matching data sets. We specify the collection 
+we are interested in. In this case it is the Sentinel-2 L2A collection in the
+Cloud optimized GeoTiff format on AWS cloud.
+In the spatial domain we will query the bounding box of our AOI because all scenes 
+which intersect with this area are generally of interest to us. Secondly, we restrict 
+the search to scenes with an overflight date between January, 1st 2018 to December, 
+31th 2020, so we query for three consecutive years. With the period parameter we 
+indicate that we are interested in the complete time series and not only in a 
+seasonal query meaning that the months of the after and before parameters are 
+queried for each year. Additionally we add a filter to only include scenes which 
+show cloud cover less than 25 % so we exclude the most cloudy scenes from the 
+download. We also specify an existing output directory where the files will be written to.
+
+```{r download-paras}
+
+collection = "sentinel-s2-l2a-cogs"
+bbox = as.numeric(st_bbox(aoi))
+after = "2015-01-01"
+before = "2021-04-13"
+period = "full"
+max.cloud = 90
+assets = c("B02", "B04", "B08", "SCL")
+outdir = "test/sentinel/"
+
+
+```
+
+Starting download the download is than as easy as:
+
+```{r download-s2, eval = F}
+
+items = download_aws(collection = collection,
+             bbox = bbox,
+             after = after,
+             before = before,
+             period = period,
+             max.cloud = max.cloud,
+             assets = assets,
+             outdir = outdir,
+             query_only = T)
+
+```
+
+Note that we downloaded all tiles matching our query but they are located
+irreguarily in time and space depending on the overflights of the Sentinel 
+satellites. Additionally we also excluded tiles with cloud cover above 25% percent
+which will lead to missing observations. Our aim at this moment is to retrieve
+a dense and regular time series which can later be used e.g. in trend calculation,
+phenological analysis or machine learning approaches. Let's assume that we
+want to base our analysis on a monthly dense time series. In the next function
+call we will specify at which spatiotemporal dimension we look at our AOI.
+Look out for the comments to understand what each function parameter means.
+
+First, let's define some parameters of our cube.
+
+```{r}
+dx = 100
+dy = 100
+dt = "P1M"
+srs = "EPSG:32643"
+aggregation = "median"
+resampling = "bilinear"
+chunking = c(24, 1024, 1024)
+threads = 2
+```
+
+
+
+```{r}
+files = list.files("test/sentinel/", pattern = ".tif", full.names = T) # get the paths to all downloaded files
+aoi_utm = st_transform(aoi, crs = st_crs(32643)) # we transform the aoi to a projected CRS
+bbox = st_bbox(aoi_utm) # retrieving the bounding box of our aoi
+index_files = cube_indexcalc(files = files, # which files to operate on
+                             bbox = bbox,   # the bounding box of our AOI
+                             srs = srs,  # the CRS of the resulting raster files
+                             dx = dx,  # the spatial resolution in x direction (in units of CRS - here meters)
+                             dy = dy,  # the spatial resolution in y direction (in units of CRS - here meters)
+                             dt = dt, # the temporal resolution (here reads as monthly)
+                             aggregation = aggregation, # aggregation function of all pixels belonging to a single time unit (i.e. one month) 
+                             resampling = resampling, # resampling function for spatial resampling to the target resolution
+                             tmpagg = FALSE, # logical if the complete time series shall be aggregated, FALSE in this case
+                             index = c("NDVI", "EVI"), # vector of short names of indices to calculate
+                             label = "indices", # label used to name output raster files 
+                             outdir = "test/indices/monthly", # output directory
+                             mask_layer = "SCL", # name of the masking layer
+                             mask_values = c(3,8,9,10,11), # values of mask to set to NA (clouds and snow)
+                             mask_invert = F, # logical if mask should be inverted (keep specified values - FALSE in this case)
+                             chunking = chunking, # size of chunks for calculation (t, x, y), governs how much RAM is used
+                             format = "mapme.vegetation/inst/sentinel2_l2a_cog.json", # name of the format file
+                             verbose = T, # level of verbosity
+                             threads = threads) # number of threads for parallel computation
+```
+
+
+## Excursion: Filling gaps in time series
+
+For demonstration purposes we calculated the NDVI on a 100 meter resolution
+because this runs quicker than at higher spatial resolutions. We now got a raster
+for every month in your observations period representing the median of the index
+for all observations within a given month. As it has been indicated before,
+this is a sparse time series because of missing observations. Consider the following
+plot, representing the NDVI curve for a randomly chosen pixel.
+
+
+```{r}
+set.seed(1234)
+(monthly = rast(index_files$files)) # read in raster files
+names(monthly) = paste(index_files$band_order, rep(index_files$time, each = length(index_files$band_order)), sep = "-")
+ndvi = monthly[[grep("NDVI", names(monthly))]]
+
+pixel_ts = ndvi[sample(1:ncell(ndvi), size = 1)] # get the values of pixel at position 5000
+time = names(pixel_ts) # get the names vetor
+raw = as.numeric(pixel_ts) # coerce to numeric
+pixel_ts = tibble(time = time, raw = raw)  %>% # make a tibble
+  mutate(time = as.Date(paste(str_sub(time, 6, -1), "-01", sep = "")))
+
+ggplot(data = pixel_ts) +
+  geom_line(aes(x=time,y=raw), color = "green") +
+  theme_classic() +
+  scale_x_date(date_labels = "%b-%Y", date_breaks = "3 month") +
+  labs(y = "NDVI", x = "Time") +
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+
+```
+As it becomes clear, there are quite a few points in time we are missing out
+on observations for that specific pixel. In the following we will demonstrate
+a common strategy to "fill" in those missing values based on this very pixel.
+Later, we will use a routine implemented in the `mapme.vegetation` package
+to simultaneously apply this strategy for all pixels within the AOI. That way,
+we are able to retrieve a dense time series with no or only few missing values.
+
+The first step in the strategy to account for missing observations consists of
+a linear interpolation of missing values based on the available observations.
+To this end we will use the `na.approx` function of the package `zoo` that 
+does exactly this. In a second step we will use a filter function to smooth
+our time series to get a more realistic curve over the time period. For this
+we are using the Savitzkiy-Golay filter from the `signal` package.
+Let's apply this process to our single pixel and visualize the results.
+
+```{r}
+
+pixel_ts %>%
+  dplyr::mutate(
+    lin = na.approx(raw, na.rm = F, rule = 2),
+    sgf = sgolayfilt(lin, p = 3, n = 11, m = 0),
+    obsv = if_else(is.nan(raw), "filled", "observed"),
+    raw = if_else(is.nan(raw), lin, raw)
+  ) %>%
+  pivot_longer(cols = 2:4, names_to = "type") -> smoothed
+
+ggplot() +
+  geom_line(data = dplyr::filter(smoothed, type != "raw"), aes(x=time,y=value,color=type)) +
+  geom_point(data = dplyr::filter(smoothed, type == "raw"), aes(x=time,y=value, shape=obsv), size = 2, color = "gray30", alpha = .5) +
+  theme_classic() +
+  scale_x_date(date_labels = "%b-%Y", date_breaks = "3 month") +
+  labs(y = "NDVI", x = "Time", shape = "Points", color = "Lines") +
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+
+```
+
+We see two different colors of dots. When you look close enough you see that the blue ones directoy folow
+the green line. These are the actually observed EVI values which are available in our time 
+series. The red dots represent the values based on the linear approximation for missing
+values. This linear approximation is represent just by this green line. The purble
+line represents the time series we obtain after applying the Savitzky-Golay filter.
+We can quickly observe the consequences of altering the parameters of the filter 
+function as an example.
+
+
+```{r}
+
+smoothed %>%
+  dplyr::select(time, type, value) %>%
+  dplyr::filter(type %in% c("lin", "sgf")) %>%
+  pivot_wider(id_cols = time, names_from = type, values_from = value) %>%
+  mutate(
+    sgfn7 =  sgolayfilt(lin, p = 3, n = 7, m = 0),
+    sgfn9 =  sgolayfilt(lin, p = 3, n = 9, m = 0),
+    sgfn11 =  sgolayfilt(lin, p = 3, n = 11, m = 0),
+    sgfp2 =  sgolayfilt(lin, p = 2, n = 7, m = 0),
+    sgfp4 =  sgolayfilt(lin, p = 4, n = 7, m = 0),
+    sgfp5 =  sgolayfilt(lin, p = 5, n = 7, m = 0)
+  ) %>%
+  pivot_longer(cols = 2:9, names_to = "type") -> sgf
+
+ggplot() +
+  geom_line(data = dplyr::filter(sgf, type != "lin"), aes(x=time,y=value,color=type)) +
+  geom_point(data = dplyr::filter(sgf, type == "lin"), aes(x=time,y=value), color = "black") +
+  theme_classic() +
+  scale_x_date(date_labels = "%b-%Y", date_breaks = "1 month") +
+  labs(y = "NDVI", x = "Time", color = "Lines") +
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+
+```
+
+It becomes evident that the parameters of the filter quite substantially influences
+the outcome of this gap filling strategy. Parameterizing the filter should be 
+carefully considered, but unfortunately there is no single solution that fits 
+all problems. (Add some literature of smoothing here).
+
+# Filling gaps
+
+Let's turn now back to our raster data and apply the gap-filling strategy we 
+just have applied to a single pixel for the complete raster set. This functionality
+is implemented in the `fill_gaps` function of the `mapme.vegetation` package.
+As an input it expects a set of raster files regularily distributed in space and
+time. Similiar to the index calculation, we can define the dimensionality of the 
+data cube in terms of spatial and temporal resolution. 
+
+```{r}
+smoothed_files = smooth_cube(files = index_files$files, 
+                             bands = index_files$band_order, 
+                             times = index_files$time, 
+                             dx = dx, 
+                             dy = dy, 
+                             dt = dt, 
+                             bbox = bbox, 
+                             srs = srs, 
+                             aggregation = aggregation, 
+                             resampling = resampling, 
+                             outdir = "test/indices/smoothed/", 
+                             prefix = "indices-smoothed-",
+                             verbose = T,
+                             threads = threads,
+                             chunking = chunking)
+```
+
+
+
+# Calculating trends
+
+Another functionality of the `mapme.package` is to calculate trends on the pixel 
+level. For the ease of the process we will calculated the trend based on 
+a yearly level, i.e. for the year 2018 and 2019. If certain months or periods
+should be compared, it is just a question of which files to hand over to the function
+and how to frame the time dimension of the data cube.
+By default the the Sen's slope and its p-value is calculated. A custom trend
+function can be handed via the `trend_function` argument. The function is expected
+to return an estimate of the trend at the first position and the p-value of the
+trend at the second position per pixel. Based on that, pixels can be filtered
+to only contain pixels that have a p-value below a certain threshold via the 
+`filter_p` argument so that e.g. only significant pixels will be kept.
+
+```{r}
+
+years = c("2018", "2019")
+file_paths = c()
+
+for(i in 1:length(years)){
+  yearly_files = smoothed_files$files[grep(years[i], smoothed_files$files)]
+  time_vec = smoothed_files$time[grep(years[i], smoothed_files$time)]
+  trend_files = trend_cube(files = yearly_files, 
+                           bands = smoothed_files$band_order, 
+                           times = time_vec, 
+                           dx = dx, dy = dy, dt = dt, 
+                           srs = srs, 
+                           aggregation = aggregation, resampling = resampling, 
+                           outdir = "test/indices/trends/", 
+                           prefix = "trend-",
+                           verbose = T,
+                           threads = threads,
+                           chunking = chunking,
+                           filter_p = 0.05)
+  file_paths = c(file_paths, trend_files)
+}
+
+```
+We can quickly visualize the resulting trend rasters using the `terra` package.
+
+```{r}
+trend_rasters = rast(file_paths[grep("NDVI", file_paths)])
+names(trend_rasters) = c("est_2018", "p_2018", "est_2019", "p_2019")
+plot(trend_rasters)
+```
+
+Another useful functionality of the `mapme.vegetation` package is the extraction
+of zonal statistics based on a number of polygons. The extracted values can be
+used for further analysis or as predictors in machine learning approaches.
+Let's extract the yearly trend for the NDVI for the polygons in the AOI.
+
+```{r}
+aoi_zs = calcZS(aoi = aoi_utm,
+                idcol = "Id", 
+                rasterfiles = file_paths[grep("NDVI", file_paths)],
+                dates = c("2018-01-01", "2019-01-01"), 
+                band_name = c("est", "p"), 
+                zonalstat = "mean", 
+                epsg = srs, 
+                dx = dx, 
+                dy = dy, 
+                dt = "P1Y", 
+                aggregation = aggregation, 
+                resampling = resampling, 
+                threads = 2)
+aoi_zs
+```
+As another example we will extract the monthly index value. This data is suitable
+for machine learning analysis.
+
+
+```{r}
+aoi_zs2 = calcZS(aoi = aoi_utm,
+                idcol = "Id", 
+                rasterfiles = smoothed_files$files,
+                dates = smoothed_files$time, 
+                band_name = c("EVI", "NDVI"), 
+                zonalstat = "mean", 
+                epsg = srs, 
+                dx = dx, 
+                dy = dy, 
+                dt = dt, 
+                aggregation = aggregation, 
+                resampling = resampling, 
+                threads = 2)
+aoi_zs2
+```
+
+
+```{r}
+
+st_drop_geometry(aoi_zs2) %>%
+  dplyr::filter(id <= sample.int(1:nrow(aoi_zs2), size = 5)) %>%
+  pivot_longer(cols = 2:3, names_to = "index",values_to = "values") %>%
+  ggplot() +
+  geom_line(aes(x=time, y=values, color = as.factor(id))) +
+  facet_wrap(~index, scales = "free_y") +
+  theme_classic() +
+  scale_x_date(date_labels = "%b-%Y", date_breaks = "3 month") +
+  labs(y = "Value", x = "Time", color = "ID") +
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+```
+

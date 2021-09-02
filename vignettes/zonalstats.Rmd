@@ -1,0 +1,92 @@
+---
+title: "Extract Zonal Statistics"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extract Zonal Statistics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, warning=F}
+library(mapme.vegetation)
+library(sf)
+library(stringr)
+```
+
+
+This vignette showcases different ways to extract zonal and pixelwise statistics
+from a time series processed with the `mapme.vegetation` package. We assume
+that we have processed S2 data to a dense time-series following vignette xx.
+Let's read in the files and our AOI.
+
+```{r}
+ndvi_files = s2_files = list.files(system.file("extdata/filled", package = "mapme.vegetation"), ".tif", full.names = T)
+bands = "NDVI"
+times = str_sub(basename(ndvi_files), -14, -5)
+
+aoi = st_read(system.file("extdata", "exp_region_wgs.gpkg", package = "mapme.vegetation"), quiet = T)
+aoi_utm = st_transform(aoi, st_crs(32638))
+aoi_utm$id = 1
+bbox = st_bbox(aoi_utm)
+```
+
+As an example we will extract zonal statistics for the complete AOI. This function
+relies on `gdalcubes` which is why we need information of the spatio-temporal extent
+of the input files. These are the same as in the other vignettes. With this
+function we get information averaged over all pixels within a polygon for each 
+time step. This information is useful for statistical analysis and might also 
+be suitable for object based classification or regression problems which require
+information through the time axis. Specific metrics can be calculated. In case
+`zonalstat = "all"`, the count of pixels within the polygon, max, min, mean, median,
+prod, sd, sum, and var are returned. It is important to declare a column as the
+primary identification column with the argument `idcol`. Note that the returned
+object will be in a time-long format. That also means that the geometry column will be
+repeated. Because of this, the resulting object might be quite large. You can
+specify a filepath with the `outpath` argument to write the object to a GeoPackage (.gpkg).
+
+```{r}
+zs_aoi = extract_zonalstats(aoi = aoi_utm, 
+                            idcol = "id", 
+                            files = ndvi_files, 
+                            times = times, 
+                            bands = bands, 
+                            bbox = bbox, 
+                            zonalstat = "all", 
+                            after = "2017-05-01", 
+                            before = "2017-07-31", 
+                            srs = "EPSG:32638", 
+                            dx = 200, 
+                            dy = 200, 
+                            dt = "P14D", 
+                            aggregation = "max", 
+                            resampling = "near")
+head(zs_aoi)
+```
+
+On other occasions pixel-wise information for polygons might be of interest, e.g.
+when the goal of your analysis is the pixel-wise classification of a landscape.
+For this kind of extraction we rely on the `{terra}` package. For the resulting 
+data.frame object to receive the right column names, however, it is important
+to hand over the band names and the associated time-stamp for each file.
+
+```{r}
+ps_aoi = extract_pixels(files = ndvi_files,
+                         bands = bands,
+                         times = times, 
+                         aoi = aoi_utm)
+head(ps_aoi)
+```
+
+The resulting object is **not** an sf object. The spatially explicit information
+is list. However, the column `ID` indicates to to which feature in the `aoi` object
+the pixel information belongs in the order of rows of the input object. The data.frame
+object has a wide format. Each row represents a single pixel. The columns identify
+the band name as well as the time-stamp.

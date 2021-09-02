@@ -1,0 +1,101 @@
+---
+title: "03 - Zonal Statistics"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{03 - Zonal Statistics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+comment = "#>"
+)
+```
+
+```{r setup}
+library(mapme.vegetation)
+library(sf)
+library(ggplot2)
+library(rgdal)
+```
+This article explains how we can extract a number of zonal statistics for pre-processed
+vegetation indices as explained in the article on the [calculation of indices](E02-calcIndices.html).
+We assume here that we calculated yearly NDVI raster files found in the current directory
+and we are extracting zonal statistics for polygons found in an sf object. Make sure
+that the `sf` object is in the same CRS as the raster files. We add an ID column 
+to the object so to make sure we can link the resulting data to the original data.
+This is because any additional attributes will be dropped when calling the
+zonal statistics function.
+
+The code for the extraction looks like this:
+
+```{r extract, eval =F}
+aoi =  st_read(system.file("extdata", "testregion.gpkg", package = "mapme.vegetation"))
+aoi = st_transform(aoi, st_crs("EPSG:3857"))
+aoi$id = 1:nrow(id)
+rasterfiles = list.files(".", pattern = "NDVI")
+
+stats = calcZS(aoi = aoi, 
+               idcol = "id", 
+               rasterfiles = rasterfiles, 
+               dates = c("2016-12-31", "2017-12-31", "2018-12-31", "2019-12-31"), 
+               band_name = "NDVI",
+               zonalstat = "all",
+               epsg = "EPSG:3857",
+               dx = 20,
+               dy = 20,
+               dt = "P1Y",
+               aggregation = "median",
+               resampling = "bilinear",
+               threads = 4)
+
+st_write(stats, dsn = "./test.gpkg") # we have to manually write the file to disk
+
+```
+
+As you can see, this time we specified the timestemps for each individual file directly.
+This is because gdalcubes has no other way to extract the time information from the processed
+NDVI files. We provide a band name which later will be included in the resulting `sf`
+object containing the zonal statistics. We also told the function to calculate all 
+available statistics which are `min`, `max`, `mean`, `median`, `count`, `sum`, `prod`, `var`, and`sd`.
+But we also could have chosen any combination of these statistics. Because internally
+another data cube is created for the extraction, we have to specify its spatio-temporal
+properties once again (see the article on [index calculation](E02-calcIndices.html) for more information).
+
+```{r stats, include=FALSE}
+stats = st_read(system.file("extdata", "testregion_zonalstats.gpkg", package = "mapme.vegetation"), quiet = T)
+```
+
+The resulting object will be a sf object in long format. For each timestep 
+all calculated statistics as well as the id column and the geometry will be repeated.
+Thus, when we calculate zonal statistics for 100 polygons over four timesteps, 
+our resulting object will have 400 rows.
+
+```{r}
+stats
+```
+
+To do some basic analysis to compare different timesteps we are going to use a 
+simple ggplot2 boxplot and we are reshaping our data to a truly long format beforehand.
+
+```{r}
+library(ggplot2)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+st_drop_geometry(stats) %>%
+  mutate(time = as.factor(str_sub(time, 1, 4))) %>%
+  gather(stat, value, -time, -id) %>%
+  mutate(stat = str_remove_all(stat, "NDVI_")) %>%
+filter(stat %in% c("min", "max", "median", "mean")) %>%
+  ggplot()+
+  geom_boxplot(aes(x=time, group=time, y=value, fill=time), notch = T)+
+  facet_wrap(~stat)+
+  theme_minimal()
+```
+

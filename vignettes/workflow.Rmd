@@ -1,0 +1,62 @@
+---
+title: "Workflow"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 5,
+  fig.height = 5
+)
+```
+
+In the following, the most important steps of the processing workflow 
+of `{mapme.vegetation}` are described; the figure guides the reader through these
+descriptions. The overall goal here is to download the matching Sentinel-2 tiles
+a spatio-temporal extent of interest and process the downloaded data to 
+derive a dense time series of surface reflectance bands and vegetation indices. 
+On the other end of this process, there are optional additional analysis steps
+such as the calculation of pixel-wise trends or the extraction of zonal statistics. 
+
+-  download only relevant bands for a given spatio-temporal extent of Sentinel-2 L2A data
+-  prepare a custom cloud mask based on the sen2cor Scene Cover Classification (SCL)
+-  calculate indices and extract surface reflectance bands and aggregate values to a regular sparse timeseries
+-  apply an interpolation and smoothing strategy to fill in missing data, reduce noise, and create a dense timeseires
+-  optionally, calculate pixel-wise trends through the time dimension
+-  optionally, extract zonal statistics of areas of interest, e.g. for diff-in-diff analysis
+-  optionally, extract pixel time-series, e.g. for later usage with the `{mapme.classification}`
+
+
+```{r wflow, echo = F, fig.cap="General worklfow of the <code>{mapme.vegetation}</code> package"}
+library(DiagrammeR)
+
+mermaid("
+  graph TB
+
+    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;
+ 
+    A(Query & Download <a href='http://google.com'>link</a> )
+    B(Apply Cloud Mask)
+    C(Calculate VIs and SR)
+    D(Dense Time Series)
+    E(Trends)
+    F(Zonal Statistics)
+    G(Pixel Extraction)
+    A-->B
+    B-->C
+    C-->D
+    D-->E
+    D-->F
+    D-->G
+
+")
+
+```
+

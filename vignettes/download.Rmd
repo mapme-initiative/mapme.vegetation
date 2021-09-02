@@ -1,0 +1,121 @@
+---
+title: "Download"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{Download}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+The `mapme.vegetation` package allows us to easily download and work with Sentinel-2 (S2) Level 2A datasets.
+These datasets represent bottom of atmosphere (BOA) reflectance values processed
+with [sen2cor](https://step.esa.int/main/snap-supported-plugins/sen2cor/). 
+The data is made available via the [Earth Search](https://stacindex.org/catalogs/earth-search#/) 
+STAC API from AWS. `mapme.vegetation` can be used to query the server for a given
+spatio-temporal extent of interest and download matching results. 
+S2 download from AWS is free of cost and does not require a user account. However,
+users should be aware that there is a maximum of 500 items per query. In case
+the spatio-temporal extent will lead to more items it is up to the user to 
+split up the query into suitable chunks. The package allows for querying the data
+without a direct download in order to check the items returned.
+
+```{r }
+library(mapme.vegetation)
+library(sf)
+
+aoi = st_read(system.file("extdata", "exp_region_wgs.gpkg", package = "mapme.vegetation"), quiet = T)
+bbox = st_bbox(aoi)
+
+items = download_aws(bbox = bbox, 
+                      after = "2017-05-01", 
+                      before = "2017-07-31", 
+                      timeframe = "full", 
+                      max.cloud = 40, 
+                      query_only = TRUE)
+
+
+```
+
+The query resulted in 11 items matching the spatio-temporal extent with a maximum cloud
+cover of 40%.
+We can proceed downloading the data by setting `query_only = FALSE` and supply additional
+arguments of where to write the files
+
+
+```{r eval=FALSE}
+items = download_aws(bbox = bbox, 
+                     after = "2017-05-01", 
+                     before = "2017-07-31", 
+                     timeframe = "full", 
+                     max.cloud = 40, 
+                     outdir = "../inst/extdata/s2a", 
+                     query_only = FALSE)
+```
+
+The above call with download the data sequentially. As a alternative `mapme.vegetation`
+allows to download the data via the [aria2](https://aria2.github.io/) download utility.
+User's have to install the program manually on their machine and indicate the
+path to the aria2 binary. Additionall arguments are required to specify how many
+connections to the server should be established to download matching items in parallel.
+The function call below will download 4 items in parallel with a total of 4 connections
+per file to further speed up the download. Also, the retry argument can be set to
+specify the number of time the the function will retry to download items for which
+the download failed.
+
+```{r eval=FALSE}
+items = download_aws(bbox = bbox, 
+                     after = "2017-05-01", 
+                     before = "2017-07-30", 
+                     timeframe = "full", 
+                     max.cloud = 40, 
+                     outdir = "../inst/extdata/s2a/", 
+                     query_only = FALSE,
+                     use_aria = T,
+                     aria_bin = "/usr/bin/aria2c", 
+                     max_concurrent = 4, 
+                     max_connections = 4,
+                     retry = 1)
+```
+
+
+Note that in the above function calls `timeframe = "full"`. This way, the function
+will download all the matching items between the `after` and `before` dates (inclusive).
+If you want to request only specific months but across years specify `timeframe = "seasonal"`
+to loop over the years and download the matching time period. Note that the
+items are returned as a list with each object representing one of the queried years.
+
+```{r}
+items = download_aws(bbox = bbox, 
+                      after = "2017-05-01", 
+                      before = "2020-07-30", 
+                      timeframe = "seasonal", 
+                      max.cloud = 40, 
+                      query_only = TRUE)
+```
+
+If you are only interested in specific bands you can reduce the files to download
+by specyfing the assets you wish to download.
+
+```{r eval = F}
+
+items = download_aws(bbox = bbox, 
+                      after = "2017-05-01", 
+                      before = "2017-07-30", 
+                      timeframe = "full", 
+                      assets = c("B02", "B04", "B08", "SCL"),
+                      max.cloud = 40, 
+                      query_only = F)
+
+```
+
+
