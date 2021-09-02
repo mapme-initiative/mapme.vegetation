@@ -10,7 +10,6 @@
 ^.dockerignore$
 ^.gitignore$
 ^.Rhistory$
-^init_grass.sh$
 ^.*\.pdf
 ^LICENSE$
 ^\.github$
