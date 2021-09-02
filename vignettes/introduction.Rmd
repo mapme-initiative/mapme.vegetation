@@ -1,0 +1,103 @@
+---
+title: "Introduction"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Objectives 
+
+mapme.vegetation facilitates two important tasks: first, it can be used to create 
+the so called „input data“ (or „predictor variables“) that are needed to perform 
+supervised image classification and to create land use / land cover (LULC) maps, 
+based on remote sensing images. This task will be performed in the `{mapme.classification}` 
+package. Second, `{mapme.vegetation}` can be used to perform a spatial assessment of 
+vegetation cover change in your study area. To this end, it provides comprehensive 
+functionality to perform vegetation trend and before-after change assessments, 
+which can be the basis for diff-in-diff analysis, to give one example.
+
+`{mapme.vegetation}` is meant for users with at least some basic GIS and Remote 
+Sensing background. It supports the creation of a harmonized timeseries based on optical 
+Earth Observation (EO) satellite imagery. Users will need at least basic knowledge 
+regarding the concepts behind operating, (pre-) processing and analyzing EO data. 
+Currently, only Sentinel-2 L2A (top of canopy reflectance values) data are supported. 
+These data are retrieved from an open access [AWS bucket](https://registry.opendata.aws/sentinel-2/) via the [STAC API](https://stacspec.org/)
+that we can communicate with through the <code>{[rstac](https://cran.r-project.org/web/packages/rstac/index.html)}</code>.
+By using the [aria2](https://aria2.github.io/) downloader we can substantially 
+speed up download time. Later on, images are processed locally to create a harmonized
+time series of surface reflectance and vegetation indices. In order to efficiently
+mask cloudy pixels we rely on [GRASS GIS](https://grass.osgeo.org/) which we can
+use via the <code>{[rgrass7](https://cran.r-project.org/web/packages/rgrass7/index.html)}.
+
+## mapme.vegetation package
+
+`mapme.vegetation` eases the process of establishing a harmonized timeseries from
+multiple satellite observations. Single observations of a certain region 
+on the Earth's surface from optical sensors might be obstructed by e.g. extensive 
+cloud cover. Polar-orbiting satellites like Sentinel-2 nowadays have high revisit frequency 
+allowing us to obtain single images every 4 to 10 days for the same location. In 
+order to harness this information richness `mapme.vegetation` provides several 
+routines to consistently process satellite images to derive a dataset which is 
+ready for analysis. These routines include the masking of cloud pixels, calculation 
+of vegetation indices, filling the gaps for missing information and smoothing of 
+the resulting signal. With `mapme.vegetation` these processes are easy to implement 
+and highly customizable for specific user needs. In most cases, however, the 
+default settings allows users to seamlessly create an analysis-ready timeseries 
+based on Sentinel-2 for any location on the Earth.
+
+## Functionalities
+
+Currently, the package offers several functionalities, which should ideally be 
+used in a consecutive manner in order to realize the image preparation workflow:
+
+-  download Sentinel-2 images for a space-time location 
+-  mask out cloudy pixels
+-  calculate vegetation indices and/or retrieve the raw surface reflectance values
+-  fill missing observations through linear interpolation or more sophisticated interpolation stratgies on a pixel basis
+-  smooth the pixel's signal by applying a Savitzkiy-Golay filter or other smoothing functions
+-  optionally extract zonal statistics for areas of interest
+-  optionally conduct a trend analysis or pre-post-comparisons
+
+
+## Inputs, Outputs
+
+-  an area of interest, usually in form of an ESRI Shapefile, read into the R session
+as an sf object with the <code>{[sf](https://cran.r-project.org/web/packages/sf/index.html)}</code> package.
+Additionally, the temporal extent and the relevant bands of Sentinel-2 needs to be
+specified. User's can chosse between a high number of vegetation indices (VI) to
+be calculated based on the input data.
+-  the spatial and temporal resoultion of the target data set. User's can  specify
+these values so that the output data best fits the project's needs.
+-  the processed raster files are outputted as multi-bands GeoTIFFs
+-  additionally, aggregates, zonal-statistics and pre-post comparisons can be made
+
+## Limitations
+
+- potential limitations arise from the fact that at the time being, 
+`{mapme.vegetation}` uses data from the AWS bucket. Currently, only processed
+Sentinel-2 data are available, though it is planned to support more satellite missions
+that will be made available via the STAC API by different data provides. That means that
+globally data is only available starting from January, 2017
+
+-  Sentinel-2 data at AWS are processed COGs, that means
+the data can **not** be used as standard input to tools such as ESA's [SNAP](https://step.esa.int/main/toolboxes/snap/) 
+toolbox. 
+
+- most of the implemented functionality is pixel-based by design.
+Focal operations currently are not supported, mainly because  <code>{[gdalcubes](https://cran.r-project.org/web/packages/gdalcubes/index.html)} </code>
+is missing such functionality. That means that operations that consider the spatial
+neighborhood of a pixel currently are not supported.
+
+We are planning to add new features and to extend the 
+functionality of `{mapme.vegetation}`, and to address these limitations best possible.
+

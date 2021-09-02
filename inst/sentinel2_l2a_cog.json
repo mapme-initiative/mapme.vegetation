@@ -1,0 +1,83 @@
+{
+  "description" : "Image collection format for Sentinel 2 Level 2A data as downloaded from the Copernicus Open Access Hub, expects a list of file paths as input. The format should work on original ZIP compressed as well as uncompressed imagery.",
+  "tags" : ["Sentinel", "Copernicus", "ESA", "BOA", "Surface Reflectance"],
+  "pattern" : ".+\\.tif",
+  "images" : {
+    "pattern" : ".*/S2[AB]_(.+)_L2A_.+\\.tif"
+  },
+  "datetime" : {
+    "pattern" : ".*S2[AB]_[0-9A-Z]{5}_([0-9]{8})_[0-9]_L2A_.+\\.tif",
+    "format" : "%Y%m%d"
+  },
+  "bands" : {
+    "B1" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B01\\.tif"
+    },
+    "B2" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B02\\.tif"
+    },
+    "B3" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B03\\.tif"
+    },
+    "B4" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B04\\.tif"
+    },
+    "B5" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B05\\.tif"
+    },
+    "B6" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B06\\.tif"
+    },
+    "B7" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B07\\.tif"
+    },
+    "B8" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B08\\.tif"
+    },
+    "B8a" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B8A\\.tif"
+    },
+    "B9" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B09\\.tif"
+    },
+    "B11" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B11\\.tif"
+    },
+    "B12" : {
+      "nodata" : 0,
+      "scale" : 0.0001,
+      "pattern" : ".+_B12\\.tif"
+    },
+    "SCL" : {
+      "pattern" : ".+_SCL\\.tif"
+    },
+    "AOT" : {
+      "pattern" : ".+_AOT\\.tif"
+    },
+    "WVP" : {
+      "pattern" : ".+_WVP\\.tif"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+---
+title: "Installation"
+date: "Last modified: `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+This sections describes how to install the `{mapme.vegetation}` package. 
+Because the package handles some spatial data, we assume that you have
+a working installation of [GDAL](https://gdal.org/index.html) and [PROJ](https://proj.org/) 
+on your system. Please refer to the respective installation guides to learn about 
+how to install these programs on your OS.
+Additionally, the cloud masking routine works by using the [GRASS GIS](https://grass.osgeo.org/) software.
+Be referred to the indicated websites to learn how to install this programm.
+While the package supports sequentially downloading Sentinel-2 images from AWS,
+this could take a long time when there are many assets to download. To speed
+up this process by parallel downloading several files we support the [aria2](https://aria2.github.io/) 
+downloader. We expect that the path to the executable binaries to both a 
+working GRASS GIS installation and the aria2 downloader is known to the user
+and specified to the respective function calls.
+
+Windows users additionally will have to install the [rtools](https://cran.r-project.org/bin/windows/Rtools) 
+software for a successful installation of the `{mapme.vegetation}` package from source. 
+ 
+Installing the `{mapme.vegetation}` package is then achieved trough the following
+function call: 
+
+
+```{r installation, eval = F}
+remotes::install_github("mapme-initiative/mapme.classification")
+```
+
+The installation process will install potential missing R dependencies.
+After the successful installation, you are ready to use the package's 
+functionality. Simply load the package for your R session with the library
+call:
+
+```{r setup, val = F}
+library(mapme.vegetation)
+```
+

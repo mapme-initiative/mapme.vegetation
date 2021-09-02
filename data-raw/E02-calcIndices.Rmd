@@ -1,0 +1,126 @@
+---
+title: "02 - Calculation of Indices"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{02 - Calculation of Indices}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(sf)
+library(mapme.vegetation)
+```
+
+In this tutorial we are explaining how vegetation indices are calculated under the
+hood of the package. The most important tool we are using is the [gdalcubes](https://cran.r-project.org/web/packages/gdalcubes/index.html)
+package. This packages makes it very easy to create spatio-temporal aggregates
+of satellite observations for a given area of interest (AOI) and user defined
+aggregation methods and time-frames. Here, we assume that you already downloaded
+a number of files using the process outlined in the [Download](E01-download.html)
+article with the option `create_cloudmask` enabled. The function will not work
+on Sentinel 2 directories which do not contain cloud masks. However the cloud mask
+can be created after the download by calling `createCloudMask()` on the safe 
+directories.
+
+In order to check the available indices you can use the `check_indices()` function
+which will deliver you a data.frame with available indices. We thankfully adapted 
+these indices from the awesome`sen2r::list_indices()` package. Here we print the first 10 available 
+indices.
+
+```{r check-indices}
+head(check_indices(),10)
+```
+
+To calculate an index we will have to specify its short name found in the `name`
+column of the data.frame. Currently, there is support for a total number of 206
+different indices, however, the function can only process one index at a time thus
+if you are interested in more than one index you should loop over the function call.
+
+Here is what the function call to calculate the NDVI looks like assuming that
+in the files variables the output of a recursive file search for `.jp2` and `.tif` 
+files on the SAFE directories is found.
+
+```{r calc, eval = F}
+files = list.files("<path>/<to>/<SAFES>", pattern = ".jp2|.tif", recursive = T, full.names = TRUE)
+aoi = st_read(system.file("extdata", "testregion.gpkg", package = "mapme.vegetation"))
+aoi = st_transform(aoi, st_crs("EPSG:3857"))
+rasterfiles = calcIndex(files,
+                        aoi = aoi, 
+                        epsg = "EPSG:3857", 
+                        dx = 20, 
+                        dy = 20, 
+                        dt = "P1M", 
+                        aggregation = "mean", 
+                        resampling = "bilinear", 
+                        tmpagg = FALSE,
+                        timeframe = "complete", 
+                        index = "NDVI", 
+                        label = "NDVI", 
+                        outdir = ".", 
+                        ncores = 2)
+```
+
+Let's go through the parameters one by one. The `files` variable was already explained above.
+It comprises all single band files **including** the cloud mask for each Sentinel 2 image.
+Note that the default file names cannot be changed because `calcIndex()` retrives the
+associated timestemp for each file from the actual filename. The aoi represents
+an `sf` object to determine the spatial extent of the analysis by computing the 
+bounding box of the object and using its edge coordinates. You actually do not have
+to transform the object to the desired output projection beforehand because the 
+function will do so internally if the crs differs, however, it is good advise to 
+manually transform the `aoi`. In the `epsg` variable we define the desired output
+reference system. This can be any EPSG code, proj4 string or other formats which are
+understood by GDAL (see `gdalcubes::cube_view()` for more information). 
+`dx` and `dy` are the size of the resulting pixels in x and y direction. Their unit
+depends on the reference system sepecified in the `epsg` option, thus extra care
+should be taken that to get things right here. In the example above we are using the
+Web Mercator projection thus the unit is represented as 20 meters. `dt` specifies
+the resolution of the time dimension as an ISO8601 string, thus in the example
+above it represents a monthly resolution. This means that after the spatial warping
+to the desired CRS and spatial resolution, all images of the same month will be aggregated.
+The method of the temporal aggregation is specifed in the `aggregation` option while
+any GDAL supported image transformation for the spatial warping can be specified in
+the `resampling` option. 
+
+In the example above we set `tmpagg = FALSE` which means
+that the time dimension is not going to be reduced in the end of the calculation.
+In the present case this is the desired behaviour because we are interested in 
+monthly NDVI values. However, let us assume that we downloaded a seasonal dataset
+comprising the all Sentinel 2 datasets for the months June and July for each of 
+the years 2016 to 2019. Our goal is to retrive one raster for each year indicating
+the mean between these two months. Unfortunately, `gdalcubes` does not support irregular 
+time dimensions, for this reason we would have to process each year individually. 
+What we do not want in this case is to aggregate the raw reflectance values over 
+the complete two months and then calculate the NDVI. Rather we want the NDVI calculated
+individually for each image, aggregate the images to a monthly resolution and then
+calculate the mean of the NDVI for the two months. In cases like this we can set
+`tmpagg = TRUE` which will reduce the resulting time dimension by applying the mean 
+calculation. In these cases we also would have to set `timeframe = "seasonal"`
+to let the function know to calculate on different years seperatly. If this option
+is specified, you also have to specify a `years` vector containing the different years
+for the calculation as characters. 
+
+The `outdir` and `label` parameters expect charachter vectors. The first specifying the
+directory where the output files are written and the second specyfing a label which is
+appended to the filename. Finally the parameters `threads` expects a numeric value
+indicating how many threads should be made available to the calculation for parallel
+processing.
+
+The function will return a character vector pointing to the written `GTiff` files.
+The number of output files depends on how the function treats the time dimension because
+one file is written per final time dimension. The naming convention follows: `<outdir>/<label><timestemp>.tif`
+
+The next step in a given analysis now would be to extract zonal statistics for
+a number of polygons we are interested in from the raster files we processed here.
+This is explained in the next article on [zonal statistics](E03-zonalstats.html).
+
+
+
