@@ -1,0 +1,8 @@
+.git
+data-raw
+.git
+.gitignore
+docs
+_pkgdown.yml
+*.tar.gz$
+.github

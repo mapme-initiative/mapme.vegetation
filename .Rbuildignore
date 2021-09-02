@@ -1,0 +1,16 @@
+^\.Rprofile$
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^.git$
+^Dockerfile$
+^.dockerignore$
+^.gitignore$
+^.Rhistory$
+^init_grass.sh$
+^.*\.pdf
+^LICENSE$
+^\.github$
