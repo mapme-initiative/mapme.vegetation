@@ -1,0 +1,15 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  cloudmasking: cloudmasking.html
+  download: download.html
+  indices: indices.html
+  installation: installation.html
+  introduction: introduction.html
+  terminology: terminology.html
+  trends: trends.html
+  workflow: workflow.html
+  zonalstats: zonalstats.html
+last_built: 2021-09-02T14:18Z
+
