@@ -30,13 +30,15 @@ in order to be able to ship them with the package.
 library(mapme.vegetation)
 s2_files = list.files(system.file("extdata/s2a", package = "mapme.vegetation"), ".tif", full.names = T)
 scl_files = s2_files[grep("SCL", s2_files)]
+rundir = file.path(tempdir(), "mapme.vegetation")
+dir.create(rundir, showWarnings = F)
 
 scl_buffer(scl_files = scl_files, 
            mask_values = c(1,2,3,7,8,9,10,11), # which values to mask?
            mask_buffer = 500, # distance of buffers (in meters), here exceptionally large to show differences
            grass_bin = "/usr/bin/grass78", 
            threads = 1, 
-           outdir = "../inst/extdata/scl/")
+           outdir = rundir)
 ```
 
 Let' us compare the original SCL scene to the buffered version. We will use 
@@ -66,3 +68,7 @@ value specified in the vector `mask_value` even though the original raster does 
 contain any cells with a value of 1. In summary we get a buffered version of the SCL
 scene but we loose additional information on the classes. This should be kept in mind
 when using the routine and the value for masking should be selected accordingly.
+
+```{r rm-rundir, echo = FALSE, message=FALSE, show = FALSE}
+unlink(rundir)
+```

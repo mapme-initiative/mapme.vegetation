@@ -35,6 +35,8 @@ library(sf)
 
 aoi = st_read(system.file("extdata", "exp_region_wgs.gpkg", package = "mapme.vegetation"), quiet = T)
 bbox = st_bbox(aoi)
+rundir = file.path(tempdir(), "mapme.vegetation")
+dir.create(rundir, showWarnings = F)
 
 items = download_aws(bbox = bbox, 
                       after = "2017-05-01", 
@@ -58,7 +60,7 @@ items = download_aws(bbox = bbox,
                      before = "2017-07-31", 
                      timeframe = "full", 
                      max.cloud = 40, 
-                     outdir = "../inst/extdata/s2a", 
+                     outdir = rundir, 
                      query_only = FALSE)
 ```
 
@@ -78,7 +80,7 @@ items = download_aws(bbox = bbox,
                      before = "2017-07-30", 
                      timeframe = "full", 
                      max.cloud = 40, 
-                     outdir = "../inst/extdata/s2a/", 
+                     outdir = rundir, 
                      query_only = FALSE,
                      use_aria = T,
                      aria_bin = "/usr/bin/aria2c", 
@@ -119,3 +121,6 @@ items = download_aws(bbox = bbox,
 ```
 
 
+```{r rm-rundir, echo = FALSE, message=FALSE, show = FALSE}
+unlink(rundir)
+```

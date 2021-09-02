@@ -3,15 +3,15 @@ title: "Extract Zonal Statistics"
 date: "Last modified: `r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Extract Zonal Statistics}
+%\VignetteIndexEntry{Extract Zonal Statistics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
+  ---
+  
+  ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+collapse = TRUE,
+comment = "#>"
 )
 ```
 
@@ -79,9 +79,9 @@ to hand over the band names and the associated time-stamp for each file.
 
 ```{r}
 ps_aoi = extract_pixels(files = ndvi_files,
-                         bands = bands,
-                         times = times, 
-                         aoi = aoi_utm)
+                        bands = bands,
+                        times = times, 
+                        aoi = aoi_utm)
 head(ps_aoi)
 ```
 

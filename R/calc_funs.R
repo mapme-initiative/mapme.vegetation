@@ -144,10 +144,11 @@ extract_pixels <- function(
   ras_stack = rast(files)
   names(ras_stack) = names_vec
   spat_vector = vect(aoi)
-  vals = extract(ras_stack, spat_vector)
+  vals = as.data.frame(extract(ras_stack, spat_vector))
   aoi_meta = st_drop_geometry(aoi)
   aoi_meta$.mapmeid = 1:nrow(aoi)
   vals = left_join(vals, aoi_meta, by = c("ID" = ".mapmeid"))
+  # vals$ID = NULL
   vals
 }
 

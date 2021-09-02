@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 library(mapme.vegetation)
 library(sf)
 library(terra)
+rundir = file.path(tempdir(), "mapme.vegetation")
+dir.create(rundir, showWarnings = F)
 ```
 
 
@@ -64,7 +66,8 @@ before = "2017-07-31" # end date
 index = "NDVI" # index to calculate, can specify multiple indices
 aggregation = "max" # aggregation method for scene within the same time step
 resampling = "cubic" # GDAL resampling method to match the outcome grid size
-outdir = "../inst/extdata/ndvi" # output directory
+dir.create(file.path(rundir, "ndvi")) # create output directories
+dir.create(file.path(rundir, "filled")) # create output directories
 label = "NDVI-" # appended to filename
 mask_layer = "SCL" # which band in the data cube is used as mask
 mask_values = 1 # which values to mask out
@@ -100,7 +103,7 @@ raw_ndvi = index_cube(files = s2_files,
                       resampling = resampling, 
                       index = index, 
                       label = label, 
-                      outdir = outdir, 
+                      outdir = file.path(rundir, "ndvi"), 
                       overwrite = TRUE,
                       mask_layer = mask_layer, 
                       mask_values = mask_values,
@@ -162,7 +165,7 @@ fill_ndvi = smooth_cube(files = raw_ndvi$files,
                         bbox = bbox, 
                         aggregation = aggregation, 
                         resampling = resampling, 
-                        outdir = "../inst/extdata/filled/", 
+                        outdir = file.path(rundir, "filled"), 
                         label = label,
                         overwrite = TRUE,
                         chunking = c(7,100,100),
@@ -182,4 +185,6 @@ plot(ndvi_ras2)
 ```
 
 
-
+```{r rm-rundir, echo = FALSE, message=FALSE, show = FALSE}
+unlink(rundir, recursive = T)
+```

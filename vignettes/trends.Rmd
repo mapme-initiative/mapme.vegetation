@@ -56,6 +56,8 @@ post = ndvi_files[5:7]
 times_pre = times[1:4]
 times_post = times[5:7]
 
+rundir = file.path(tempdir(), "mapme.vegetation")
+dir.create(rundir, showWarnings = F)
 ```
 
 We will have to process each of these periods separately since the function
@@ -81,7 +83,7 @@ trend_pre = trend_cube(files = pre,
                        aggregation = "max",
                        resampling = "cubic",
                        chunking = c(4, 256, 256),
-                       outdir = "../inst/extdata/trend/",
+                       outdir = rundir,
                        label = "pre_")
 
 trend_post = trend_cube(files = post, 
@@ -97,7 +99,7 @@ trend_post = trend_cube(files = post,
                         aggregation = "max",
                         resampling = "cubic",
                         chunking = c(3, 256, 256),
-                        outdir = "../inst/extdata/trend/",
+                        outdir = rundir,
                         label = "post_")
 ```
 
@@ -106,10 +108,10 @@ Note that the first layer returned by the default trend function is the slope of
 the linear trend while the second layer defaults to the p-value.
 
 ```{r}
-pre = rast(system.file("extdata/trend/pre_2017-05-01.tif", package = "mapme.vegetation"))
+pre = rast(file.path(rundir, "pre_2017-05-01.tif"), package = "mapme.vegetation")
 names(pre) = c("PRE:slope", "PRE:p.value")
 
-post = rast(system.file("extdata/trend/post_2017-06-26.tif", package = "mapme.vegetation"))
+post = rast(file.path(rundir, "post_2017-06-26.tif"), package = "mapme.vegetation")
 names(post) = c("POST:slope", "POST:p.value")
 
 
@@ -156,3 +158,8 @@ based only on 3 or 4 data points is not very sensual. However, we showcased the
 functionality of the `{mapme.vegetation}` package to calculate and compare trends
 between different epochs as these can be used in real world analysis of project
 evaluations.
+
+```{r rm-rundir, echo = FALSE, message=FALSE, show = FALSE}
+unlink(rundir)
+```
+
