@@ -41,5 +41,6 @@ Suggests:
     rmarkdown,
     ggplot2,
     tidyr,
-    DiagrammeR
+    DiagrammeR,
+    pkgdown
 VignetteBuilder: knitr
