@@ -68,7 +68,3 @@ value specified in the vector `mask_value` even though the original raster does 
 contain any cells with a value of 1. In summary we get a buffered version of the SCL
 scene but we loose additional information on the classes. This should be kept in mind
 when using the routine and the value for masking should be selected accordingly.
-
-```{r rm-rundir, echo = FALSE, message=FALSE, show = FALSE}
-unlink(rundir)
-```

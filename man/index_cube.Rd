@@ -6,7 +6,7 @@
 \usage{
 index_cube(
   files = NULL,
-  format = NULL,
+  format = system.file("sentinel2_l2a_cog.json", package = "mapme.vegetation"),
   DB_path = NULL,
   dx = NULL,
   dy = NULL,

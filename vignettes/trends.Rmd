@@ -108,10 +108,10 @@ Note that the first layer returned by the default trend function is the slope of
 the linear trend while the second layer defaults to the p-value.
 
 ```{r}
-pre = rast(file.path(rundir, "pre_2017-05-01.tif"), package = "mapme.vegetation")
+pre = rast(file.path(rundir, "pre_2017-05-01.tif"))
 names(pre) = c("PRE:slope", "PRE:p.value")
 
-post = rast(file.path(rundir, "post_2017-06-26.tif"), package = "mapme.vegetation")
+post = rast(file.path(rundir, "post_2017-06-26.tif"))
 names(post) = c("POST:slope", "POST:p.value")
 
 
