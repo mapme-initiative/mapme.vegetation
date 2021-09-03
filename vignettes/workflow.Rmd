@@ -34,7 +34,7 @@ such as the calculation of pixel-wise trends or the extraction of zonal statisti
 -  optionally, extract pixel time-series, e.g. for later usage with the `{mapme.classification}`
 
 
-```{r wflow, echo = F, fig.cap="General worklfow of the <code>{mapme.vegetation}</code> package"}
+```{r wflow, echo = FALSE}
 library(DiagrammeR)
 
 mermaid("
@@ -42,7 +42,7 @@ mermaid("
 
     classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;
  
-    A(Query & Download <a href='http://google.com'>link</a> )
+    A(Query & Download)
     B(Apply Cloud Mask)
     C(Calculate VIs and SR)
     D(Dense Time Series)
