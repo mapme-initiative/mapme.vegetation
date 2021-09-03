@@ -101,7 +101,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Workflow</h1>
             
-            <h4 class="date">Last modified: 2021-09-02</h4>
+            <h4 class="date">Last modified: 2021-09-03</h4>
       
       
       <div class="hidden name"><code>workflow.Rmd</code></div>
@@ -121,13 +121,9 @@
 <li>optionally, extract pixel time-series, e.g. for later usage with the <code>{mapme.classification}</code>
 </li>
 </ul>
-<div class="figure">
-<div id="htmlwidget-1b66ca9358e966708150" style="width:480px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1b66ca9358e966708150">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download <a href='http://google.com'>link<\/a> )\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script><p class="caption">
-General worklfow of the <code>{mapme.vegetation}</code> package
-</p>
+<div id="htmlwidget-81cd17199c67bd4c6731" style="width:480px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-81cd17199c67bd4c6731">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download)\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script>
 </div>
-  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
