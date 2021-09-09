@@ -99,7 +99,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculate Indices</h1>
             
-            <h4 class="date">Last modified: 2021-09-03</h4>
+            <h4 class="date">Last modified: 2021-09-09</h4>
       
       
       <div class="hidden name"><code>indices.Rmd</code></div>
@@ -215,7 +215,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">)</span>
 <span class="co">#&gt; List of 3</span>
-<span class="co">#&gt;  $ files     : chr [1:7] "/tmp/Rtmp7EyqRA/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/Rtmp7EyqRA/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/Rtmp7EyqRA/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/Rtmp7EyqRA/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span>
+<span class="co">#&gt;  $ files     : chr [1:7] "/tmp/RtmpzxbsfS/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/RtmpzxbsfS/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/RtmpzxbsfS/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/RtmpzxbsfS/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span>
 <span class="co">#&gt;  $ band_order: chr "NDVI"</span>
 <span class="co">#&gt;  $ time      : chr [1:7] "2017-05-01" "2017-05-15" "2017-05-29" "2017-06-12" ...</span></code></pre></div>
 <p>Let’s visualize the NDVI raster files.</p>
@@ -230,8 +230,7 @@
 <a href="#smoothing-a-time-series" class="anchor"></a>Smoothing a Time Series</h2>
 <p>The default functionality is quite basic, applying linear interpolation and applying a Savitzkiy-Golay filter. In case you need a more sophisticated gap-filling strategy you can define your own function. The function receives the time series of each pixel and is expected to return the same number of pixels. Let’s consider the smoothing with the basic approach. We will set the chunking option to simultaneously process all 7 time-steps of our spatio-temporal extent. This is important so that the complete time series is available.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,
+<code class="sourceCode R"><span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,
                         bands <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">band_order</span>, 
                         times <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">time</span>,
                         dx <span class="op">=</span> <span class="va">dx</span>, 

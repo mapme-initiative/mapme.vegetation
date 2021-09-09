@@ -94,14 +94,14 @@
 
       
 
-      </header><script src="workflow_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="workflow_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="workflow_files/d3-3.3.8/d3.min.js"></script><script src="workflow_files/dagre-0.4.0/dagre-d3.min.js"></script><link href="workflow_files/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
+      </header><script src="workflow_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="workflow_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="workflow_files/d3-3.3.8/d3.min.js"></script><script src="workflow_files/dagre-0.4.0/dagre-d3.min.js"></script><link href="workflow_files/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
 <script src="workflow_files/mermaid-0.3.0/dist/mermaid.slim.min.js"></script><link href="workflow_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="workflow_files/chromatography-0.1/chromatography.js"></script><script src="workflow_files/DiagrammeR-binding-1.0.6.1/DiagrammeR.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Workflow</h1>
             
-            <h4 class="date">Last modified: 2021-09-03</h4>
+            <h4 class="date">Last modified: 2021-09-09</h4>
       
       
       <div class="hidden name"><code>workflow.Rmd</code></div>
@@ -118,11 +118,11 @@
 <li>apply an interpolation and smoothing strategy to fill in missing data, reduce noise, and create a dense timeseires</li>
 <li>optionally, calculate pixel-wise trends through the time dimension</li>
 <li>optionally, extract zonal statistics of areas of interest, e.g. for diff-in-diff analysis</li>
-<li>optionally, extract pixel time-series, e.g. for later usage with the <code>{mapme.classification}</code>
+<li>optionally, extract pixel time-series, e.g. for later usage with the <code>{<a href="https://mapme-initiative.github.io/mapme.classification/">mapme.classification</a>}</code>
 </li>
 </ul>
-<div id="htmlwidget-81cd17199c67bd4c6731" style="width:480px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-81cd17199c67bd4c6731">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download)\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-5eae509bcc537cffeffd" style="width:480px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5eae509bcc537cffeffd">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download)\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script>
 </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
