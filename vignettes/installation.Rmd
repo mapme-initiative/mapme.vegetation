@@ -38,7 +38,7 @@ function call:
 
 
 ```{r installation, eval = F}
-remotes::install_github("mapme-initiative/mapme.classification")
+remotes::install_github("mapme-initiative/mapme.vegetation")
 ```
 
 The installation process will install potential missing R dependencies.

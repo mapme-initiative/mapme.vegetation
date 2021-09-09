@@ -31,7 +31,7 @@ such as the calculation of pixel-wise trends or the extraction of zonal statisti
 -  apply an interpolation and smoothing strategy to fill in missing data, reduce noise, and create a dense timeseires
 -  optionally, calculate pixel-wise trends through the time dimension
 -  optionally, extract zonal statistics of areas of interest, e.g. for diff-in-diff analysis
--  optionally, extract pixel time-series, e.g. for later usage with the `{mapme.classification}`
+-  optionally, extract pixel time-series, e.g. for later usage with the <code>{[mapme.classification](https://mapme-initiative.github.io/mapme.classification/)}</code>
 
 
 ```{r wflow, echo = FALSE}
