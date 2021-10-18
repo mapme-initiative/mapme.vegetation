@@ -99,7 +99,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculate Trends</h1>
             
-            <h4 class="date">Last modified: 2021-09-09</h4>
+            <h4 class="date">Last modified: 2021-10-18</h4>
       
       
       <div class="hidden name"><code>trends.Rmd</code></div>
@@ -116,7 +116,8 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>
-<span class="co">#&gt; terra version 1.3.22</span>
+<span class="co">#&gt; terra version 1.4.11</span>
+
 <span class="va">ndvi_files</span> <span class="op">=</span> <span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/filled"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 <span class="va">bands</span> <span class="op">=</span> <span class="st">"NDVI"</span>
 <span class="va">times</span> <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html">str_sub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">ndvi_files</span><span class="op">)</span>, <span class="op">-</span><span class="fl">14</span>, <span class="op">-</span><span class="fl">5</span><span class="op">)</span>
@@ -161,6 +162,7 @@
 <span class="co">#&gt; SRS: "EPSG:32638"</span>
 <span class="co">#&gt; Temporal aggregation method: "max"</span>
 <span class="co">#&gt; Spatial resampling method: "cubic"</span>
+
 <span class="va">trend_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/trend_cube.html">trend_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">post</span>, 
                         bands <span class="op">=</span> <span class="va">bands</span>, 
                         times <span class="op">=</span> <span class="va">times_post</span>, 
@@ -209,7 +211,7 @@
 <span class="co">#&gt; dimensions  : 55, 72, 1  (nrow, ncol, nlyr)</span>
 <span class="co">#&gt; resolution  : 200, 200  (x, y)</span>
 <span class="co">#&gt; extent      : 348138.6, 362538.6, 1055985, 1066985  (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; coord. ref. : +proj=utm +zone=38 +datum=WGS84 +units=m +no_defs </span>
+<span class="co">#&gt; coord. ref. : WGS 84 / UTM zone 38N (EPSG:32638) </span>
 <span class="co">#&gt; source      : memory </span>
 <span class="co">#&gt; name        : POST:slope </span>
 <span class="co">#&gt; min value   :  -165.7377 </span>

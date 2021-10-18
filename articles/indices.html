@@ -99,7 +99,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculate Indices</h1>
             
-            <h4 class="date">Last modified: 2021-09-09</h4>
+            <h4 class="date">Last modified: 2021-10-18</h4>
       
       
       <div class="hidden name"><code>indices.Rmd</code></div>
@@ -116,7 +116,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>
-<span class="co">#&gt; terra version 1.3.22</span>
+<span class="co">#&gt; terra version 1.4.11</span>
 <span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 </div>
@@ -215,7 +215,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">)</span>
 <span class="co">#&gt; List of 3</span>
-<span class="co">#&gt;  $ files     : chr [1:7] "/tmp/RtmpRL9zJk/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/RtmpRL9zJk/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/RtmpRL9zJk/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/RtmpRL9zJk/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span>
+<span class="co">#&gt;  $ files     : chr [1:7] "/tmp/Rtmp8q97Kq/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/Rtmp8q97Kq/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/Rtmp8q97Kq/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/Rtmp8q97Kq/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span>
 <span class="co">#&gt;  $ band_order: chr "NDVI"</span>
 <span class="co">#&gt;  $ time      : chr [1:7] "2017-05-01" "2017-05-15" "2017-05-29" "2017-06-12" ...</span></code></pre></div>
 <p>Let’s visualize the NDVI raster files.</p>
@@ -230,7 +230,8 @@
 <a href="#smoothing-a-time-series" class="anchor"></a>Smoothing a Time Series</h2>
 <p>The default functionality is quite basic, applying linear interpolation and applying a Savitzkiy-Golay filter. In case you need a more sophisticated gap-filling strategy you can define your own function. The function receives the time series of each pixel and is expected to return the same number of pixels. Let’s consider the smoothing with the basic approach. We will set the chunking option to simultaneously process all 7 time-steps of our spatio-temporal extent. This is important so that the complete time series is available.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,
+<code class="sourceCode R">
+<span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,
                         bands <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">band_order</span>, 
                         times <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">time</span>,
                         dx <span class="op">=</span> <span class="va">dx</span>, 
