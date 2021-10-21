@@ -35,7 +35,7 @@ Imports: gdalcubes,
          link2GI,
          rgrass7,
          snow
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     knitr,
     rmarkdown,

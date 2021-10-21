@@ -133,7 +133,7 @@ to outdir.
 See \code{\link[gdalcubes]{cube_view}} and \code{\link[gdalcubes]{zonal_statistics}} for more information.
 }
 \author{
-Darius Görgen, Dr. Fabian Löw (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
+Darius Görgen (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
 \cr
 \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
 \cr
