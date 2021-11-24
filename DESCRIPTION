@@ -1,9 +1,11 @@
 Package: mapme.vegetation
 Title: Tool chain for Sentinel-2 L2A processing
 Version: 0.0.0.9000
-Authors@R: c(person("MAPME-Initiative", role = c("cre", "cph"), email = "contact@mapme-initiative.org"),
-             person(given = "Darius", family = "Görgen", role = "aut", email = "darius.goergen@maptailor.net"))
-Maintainer: MAPME-Initiative <contact@mapme-initiative.org>
+Authors@R: c(person(given = "Darius", 
+                    family = "Görgen", 
+                    role = c("cre", "aut"), 
+                    email = "darius2402@web.de")
+                    )
 Description: This package allows an easy access to Sentinel-2 Level 2A data
      from the freely available Amazon AWS bucket and subsequent processing based on the 
      the datacube framework provided by gdalcubes. A total number of 206 vegetation 
