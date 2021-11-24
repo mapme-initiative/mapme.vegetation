@@ -171,41 +171,42 @@ Use the values found in the column <code>name</code> to specify an individual in
 <em>License:</em> GPL-3</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>mapme.vegetation</span><span class='op'>)</span>
-<span class='fu'>check_indices</span><span class='op'>(</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>
-</div><div class='output co'>#&gt;                                        longname      name
-#&gt; 1            Aerosol free vegetation index 1600  AFRI1600
-#&gt; 2            Aerosol free vegetation index 2100  AFRI2100
-#&gt; 3                 Anthocyanin reflectance index       ARI
-#&gt; 4                      Ashburn Vegetation Index       AVI
-#&gt; 5  Atmospherically Resistant Vegetation Index 2     ARVI2
-#&gt; 6      Blue-wide dynamic range vegetation index    BWDRVI
-#&gt; 7                    Browning Reflectance Index       BRI
-#&gt; 8                       Chlorophyll Index Green   CIgreen
-#&gt; 9                      Chlorophyll IndexRedEdge CIrededge
-#&gt; 10                             Coloration Index        CI
-#&gt;                                                  link
-#&gt; 1  http://www.indexdatabase.de/db/i-single.php?id=393
-#&gt; 2  http://www.indexdatabase.de/db/i-single.php?id=395
-#&gt; 3  http://www.indexdatabase.de/db/i-single.php?id=214
-#&gt; 4  http://www.indexdatabase.de/db/i-single.php?id=574
-#&gt; 5  http://www.indexdatabase.de/db/i-single.php?id=396
-#&gt; 6  http://www.indexdatabase.de/db/i-single.php?id=136
-#&gt; 7  http://www.indexdatabase.de/db/i-single.php?id=480
-#&gt; 8  http://www.indexdatabase.de/db/i-single.php?id=128
-#&gt; 9  http://www.indexdatabase.de/db/i-single.php?id=131
-#&gt; 10  http://www.indexdatabase.de/db/i-single.php?id=11
-#&gt;                                       s2_formula
-#&gt; 1  (band_8-0.66*(band_11)/(band_8+0.66*band_11))
-#&gt; 2   (band_8-0.5*(band_12)/(band_8+0.56*band_12))
-#&gt; 3                      (1)/(band_3)-(1)/(band_5)
-#&gt; 4                              2.0*band_9-band_4
-#&gt; 5   -0.18+1.17*((band_8-band_4)/(band_8+band_4))
-#&gt; 6        (0.1*band_8-band_2)/(0.1*band_8+band_2)
-#&gt; 7           ((1)/(band_3)-(1)/(band_5))/(band_8)
-#&gt; 8                            (band_8)/(band_3)-1
-#&gt; 9                            (band_8)/(band_5)-1
-#&gt; 10                      (band_4-band_2)/(band_4)</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>mapme.vegetation</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>check_indices</span><span class='op'>(</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                        longname      name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            Aerosol free vegetation index 1600  AFRI1600</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            Aerosol free vegetation index 2100  AFRI2100</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3                 Anthocyanin reflectance index       ARI</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4                      Ashburn Vegetation Index       AVI</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5  Atmospherically Resistant Vegetation Index 2     ARVI2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6      Blue-wide dynamic range vegetation index    BWDRVI</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7                    Browning Reflectance Index       BRI</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8                       Chlorophyll Index Green   CIgreen</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9                      Chlorophyll IndexRedEdge CIrededge</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10                             Coloration Index        CI</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                  link</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1  http://www.indexdatabase.de/db/i-single.php?id=393</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2  http://www.indexdatabase.de/db/i-single.php?id=395</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3  http://www.indexdatabase.de/db/i-single.php?id=214</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4  http://www.indexdatabase.de/db/i-single.php?id=574</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5  http://www.indexdatabase.de/db/i-single.php?id=396</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6  http://www.indexdatabase.de/db/i-single.php?id=136</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7  http://www.indexdatabase.de/db/i-single.php?id=480</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8  http://www.indexdatabase.de/db/i-single.php?id=128</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9  http://www.indexdatabase.de/db/i-single.php?id=131</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10  http://www.indexdatabase.de/db/i-single.php?id=11</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                       s2_formula</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1  (band_8-0.66*(band_11)/(band_8+0.66*band_11))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2   (band_8-0.5*(band_12)/(band_8+0.56*band_12))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3                      (1)/(band_3)-(1)/(band_5)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4                              2.0*band_9-band_4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5   -0.18+1.17*((band_8-band_4)/(band_8+band_4))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6        (0.1*band_8-band_2)/(0.1*band_8+band_2)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7           ((1)/(band_3)-(1)/(band_5))/(band_8)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8                            (band_8)/(band_3)-1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9                            (band_8)/(band_5)-1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10                      (band_4-band_2)/(band_4)</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -217,7 +218,7 @@ Use the values found in the column <code>name</code> to specify an individual in
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://mapme-initiative.org/'>MAPME-Initiative</a>, <a href='http://dariusgoergen.com/'>Darius Görgen</a>.</p>
+  <p>Developed by <a href='http://dariusgoergen.com/'>Darius Görgen</a>.</p>
 </div>
 
 <div class="pkgdown">

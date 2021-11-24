@@ -99,7 +99,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Download</h1>
             
-            <h4 class="date">Last modified: 2021-10-21</h4>
+            <h4 class="date">Last modified: 2021-11-24</h4>
       
       
       <div class="hidden name"><code>download.Rmd</code></div>
@@ -130,7 +130,7 @@
 <span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
 <span class="co">#&gt; ###STACItemCollection</span>
 <span class="co">#&gt; - matched feature(s): 11</span>
-<span class="co">#&gt; - features (11 item(s)):</span>
+<span class="co">#&gt; - features (11 item(s) / 0 not fetched):</span>
 <span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span>
@@ -142,7 +142,9 @@
 <span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span>
-<span class="co">#&gt; - field(s): </span>
+<span class="co">#&gt; - assets: </span>
+<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
+<span class="co">#&gt; - other field(s): </span>
 <span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span></code></pre></div>
 <p>The query resulted in 11 items matching the spatio-temporal extent with a maximum cloud cover of 40%. We can proceed downloading the data by setting <code>query_only = FALSE</code> and supply additional arguments of where to write the files</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -180,7 +182,7 @@
 <span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
 <span class="co">#&gt; ###STACItemCollection</span>
 <span class="co">#&gt; - matched feature(s): 11</span>
-<span class="co">#&gt; - features (11 item(s)):</span>
+<span class="co">#&gt; - features (11 item(s) / 0 not fetched):</span>
 <span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span>
@@ -192,13 +194,15 @@
 <span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span>
-<span class="co">#&gt; - field(s): </span>
+<span class="co">#&gt; - assets: </span>
+<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
+<span class="co">#&gt; - other field(s): </span>
 <span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
 <span class="co">#&gt; Querying data for temporal window 2018-05-01/2018-07-30</span>
 <span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
 <span class="co">#&gt; ###STACItemCollection</span>
 <span class="co">#&gt; - matched feature(s): 17</span>
-<span class="co">#&gt; - features (17 item(s)):</span>
+<span class="co">#&gt; - features (17 item(s) / 0 not fetched):</span>
 <span class="co">#&gt;   - S2A_38PLR_20180727_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20180722_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20180717_0_L2A</span>
@@ -216,13 +220,15 @@
 <span class="co">#&gt;   - S2B_38PLR_20180513_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20180508_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20180503_0_L2A</span>
-<span class="co">#&gt; - field(s): </span>
+<span class="co">#&gt; - assets: </span>
+<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
+<span class="co">#&gt; - other field(s): </span>
 <span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
 <span class="co">#&gt; Querying data for temporal window 2019-05-01/2019-07-30</span>
 <span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
 <span class="co">#&gt; ###STACItemCollection</span>
 <span class="co">#&gt; - matched feature(s): 17</span>
-<span class="co">#&gt; - features (17 item(s)):</span>
+<span class="co">#&gt; - features (17 item(s) / 0 not fetched):</span>
 <span class="co">#&gt;   - S2B_38PLR_20190727_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20190722_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20190717_0_L2A</span>
@@ -240,13 +246,15 @@
 <span class="co">#&gt;   - S2B_38PLR_20190508_1_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20190508_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20190503_0_L2A</span>
-<span class="co">#&gt; - field(s): </span>
+<span class="co">#&gt; - assets: </span>
+<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
+<span class="co">#&gt; - other field(s): </span>
 <span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
 <span class="co">#&gt; Querying data for temporal window 2020-05-01/2020-07-30</span>
 <span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
 <span class="co">#&gt; ###STACItemCollection</span>
 <span class="co">#&gt; - matched feature(s): 10</span>
-<span class="co">#&gt; - features (10 item(s)):</span>
+<span class="co">#&gt; - features (10 item(s) / 0 not fetched):</span>
 <span class="co">#&gt;   - S2B_38PLR_20200711_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20200706_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20200701_0_L2A</span>
@@ -257,7 +265,9 @@
 <span class="co">#&gt;   - S2B_38PLR_20200522_0_L2A</span>
 <span class="co">#&gt;   - S2A_38PLR_20200517_0_L2A</span>
 <span class="co">#&gt;   - S2B_38PLR_20200512_0_L2A</span>
-<span class="co">#&gt; - field(s): </span>
+<span class="co">#&gt; - assets: </span>
+<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
+<span class="co">#&gt; - other field(s): </span>
 <span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span></code></pre></div>
 <p>If you are only interested in specific bands you can reduce the files to download by specyfing the assets you wish to download.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -280,7 +290,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://mapme-initiative.org/">MAPME-Initiative</a>, <a href="http://dariusgoergen.com/">Darius Görgen</a>.</p>
+  <p>Developed by <a href="http://dariusgoergen.com/">Darius Görgen</a>.</p>
 </div>
 
 <div class="pkgdown">
