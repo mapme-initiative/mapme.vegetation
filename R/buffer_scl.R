@@ -115,6 +115,7 @@ scl_buffer <- function(
 
   outname = file.path(outdir, basename(scl_file))
   if(!file.exists(outname)){
+    rgrass7::set.useInternOption(TRUE)
     tmpname = tempfile(fileext = ".tif")
     inname = scl_file
     term = paste(paste("1*(A==", mask_values, ")", sep = ""), collapse = "+")

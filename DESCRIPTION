@@ -1,6 +1,6 @@
 Package: mapme.vegetation
 Title: Tool chain for Sentinel-2 L2A processing
-Version: 0.0.0.9000
+Version: 0.0.0.9010
 Authors@R: c(person(given = "Darius", 
                     family = "Görgen", 
                     role = c("cre", "aut"), 
@@ -18,7 +18,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5)
-Imports: gdalcubes,
+Imports: gdalcubes (>= 0.6),
          sf,
          rgdal,
          stars,

@@ -130,7 +130,7 @@ are written to a Geopackage for each timestep labeled as \code{<label>_<index>_<
 to outdir.
 }
 \note{
-See \code{\link[gdalcubes]{cube_view}} and \code{\link[gdalcubes]{zonal_statistics}} for more information.
+See \code{\link[gdalcubes]{cube_view}} for more information.
 }
 \author{
 Darius Görgen (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}

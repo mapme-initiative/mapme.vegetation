@@ -137,7 +137,7 @@ smooth_cube <- function(
                                 "lanczos", "average", "rms", "mode", "max",
                                 "min", "med", "q1", "q3", "sum"),
               msg = paste0("Aggregation ", resampling, " not a valid aggregation method."))
-  gdalcubes_options(threads = threads, progress = verbose)
+  gdalcubes_options(parallel = threads, progress = verbose)
 
 
   if(timeframe == "seasonal"){
@@ -367,8 +367,6 @@ smooth_cube <- function(
   }
 
   cube = raster_cube(col, cubeview, chunking = chunking)
-  #.check_smoother(cube, smoothing_function, n = n)
-  #if(verbose) message(sprintf("Smoother successfully checked on %s random pixels.", n))
 
   cube %>%
     apply_time(names = bands,

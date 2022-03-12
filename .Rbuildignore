@@ -13,3 +13,4 @@
 ^.*\.pdf
 ^LICENSE$
 ^\.github$
+^depricated$

@@ -38,67 +38,6 @@
   ext
 }
 
-#' Internal function used to sample the smoothing function
-#'
-#' This function samples a ratio of p pixels of the data cube and applies
-#' the smoothing function on them. The output is checked to contain no NA's
-#' and an equal number of rows (bands) and columns (time steps) as the input
-#' data cube.
-#'
-#' @param cube A data cube from which a random sample is drawn.
-#' @param smoothing_function A smoothing function to be applied.
-#' @param p A ratio of random pixels to be sampled.
-#'
-#' @return Nothing. Throws an error if the smoothing function does not
-#'   maintain cube dimensions and removes NA's.
-#' @export
-#' @import gdalcubes
-#' @keywords internal
-#' @author Darius Görgen (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
-#' \cr
-#' \emph{Maintainer:} MAPME-Initiative \email{contact@mapme-initiative.org}
-#' \cr
-#' \emph{Contact Person:} Dr. Johannes Schielein
-#' \cr
-#' \emph{Copyright:} MAPME-Initiative
-#' \cr
-#' \emph{License:} GPL-3
-.check_smoother <- function(
-  cube,
-  smoothing_function,
-  n = 100){
-
-  x_dim = dimension_values(cube)$x
-  y_dim = dimension_values(cube)$y
-  t_dim = dimensions(cube)$t$count
-  srs = srs(cube)
-  x = sample(x_dim, n)
-  y = sample(y_dim, n)
-  x_y = expand.grid(x,y)
-  names(x_y) = c("x", "y")
-
-  cube %>%
-    query_timeseries(px = x_y$x, py = x_y$y, srs = srs) -> out
-
-  for(i in 1:nrow(out[[1]])){
-
-    test = lapply(1:length(out), function(j){
-      vec = as.numeric(out[[j]][i,])
-      vec[which(is.nan(vec))] = NA
-      vec
-    })
-
-    test = do.call(rbind, test)
-    rownames(test) = names(out)
-    test = smoothing_function(test)
-    if(ncol(test) != t_dim | sum(is.na(test)) != 0 | nrow(test) != length(out)){
-      stop("Smoothing function can not be applied. Make sure it returns the same number of bands, timesteps and removes all mising values.")
-    }
-  }
-
-}
-
-
 #' Check specified dates and arrange for download
 #'
 #' This function is used to check if the user specified dates can be coerced

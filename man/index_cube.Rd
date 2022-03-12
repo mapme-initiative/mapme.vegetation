@@ -132,7 +132,7 @@ it is assumed that the complete timeseries of the input files should be covered
 by the temporal resolution specified in the \code{dt} variable.
 }
 \note{
-See \code{\link[gdalcubes]{cube_view}} and \code{\link[gdalcubes]{zonal_statistics}} for more information.
+See \code{\link[gdalcubes]{cube_view}} for more information.
 }
 \author{
 Darius Görgen (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}

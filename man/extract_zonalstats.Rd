@@ -10,7 +10,7 @@ extract_zonalstats(
   files = NULL,
   times,
   bands,
-  zonalstat,
+  zonalfuns,
   bbox,
   after,
   before,
@@ -38,7 +38,7 @@ to allow feature identification.}
 
 \item{bands}{Input band names}
 
-\item{zonalstat}{Zonal stats to calculate}
+\item{zonalfuns}{A named list with functions for zonal statistics as elements}
 
 \item{bbox}{Bounding Box}
 

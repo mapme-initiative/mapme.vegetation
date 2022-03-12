@@ -4,8 +4,10 @@ date: "Last modified: `r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
  %\VignetteIndexEntry{Extract Zonal Statistics}
- %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
+ %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
   
 ```{r, include = FALSE}
@@ -44,9 +46,9 @@ of the input files. These are the same as in the other vignettes. With this
 function we get information averaged over all pixels within a polygon for each 
 time step. This information is useful for statistical analysis and might also 
 be suitable for object based classification or regression problems which require
-information through the time axis. Specific metrics can be calculated. In case
-`zonalstat = "all"`, the count of pixels within the polygon, max, min, mean, median,
-prod, sd, sum, and var are returned. It is important to declare a column as the
+information through the time axis. Specific metrics can be calculated. Thanks to 
+the gdalcubes package, any R function that summarizes the data per zone can be supplied to a 
+named list. It is important to declare a column as the
 primary identification column with the argument `idcol`. Note that the returned
 object will be in a time-long format. That also means that the geometry column will be
 repeated. Because of this, the resulting object might be quite large. You can
@@ -59,7 +61,7 @@ zs_aoi = extract_zonalstats(aoi = aoi_utm,
                             times = times, 
                             bands = bands, 
                             bbox = bbox, 
-                            zonalstat = "all", 
+                            zonalfuns = c(sum = sum, mean = mean, median = median, ncells = length), 
                             after = "2017-05-01", 
                             before = "2017-07-31", 
                             srs = "EPSG:32638", 

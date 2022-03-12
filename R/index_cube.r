@@ -16,7 +16,7 @@
 #'
 #' @return Nothing. However a \code{GTiff} and a \code{GPKG} with the zonal statistics are written to
 #'   \code{outdir} for every resulting timestep.
-#' @note See \code{\link[gdalcubes]{cube_view}} and \code{\link[gdalcubes]{zonal_statistics}} for more information.
+#' @note See \code{\link[gdalcubes]{cube_view}} for more information.
 #' @importFrom  stringr str_sub
 #' @export index_cube
 #' @inheritParams .calc_index
@@ -212,10 +212,10 @@ index_cube <-  function(
 #'
 #' @return Nothing. However a \code{GTiff} and a \code{GPKG} with the zonal statistics are written to
 #'   \code{outdir} for every resulting timestep.
-#' @note See \code{\link[gdalcubes]{cube_view}} and \code{\link[gdalcubes]{zonal_statistics}} for more information.
+#' @note See \code{\link[gdalcubes]{cube_view}} for more information.
 #' @export .calc_index
 #' @keywords internal
-#' @importFrom gdalcubes create_image_collection extent cube_view raster_cube select_bands apply_pixel reduce_time write_tif zonal_statistics image_mask gdalcubes_options
+#' @importFrom gdalcubes create_image_collection extent cube_view raster_cube select_bands apply_pixel reduce_time write_tif image_mask gdalcubes_options
 #' @importFrom sf st_crs st_transform st_zm st_bbox
 #' @importFrom stringr str_extract_all str_remove str_replace_all
 #' @importFrom utils read.csv
@@ -269,7 +269,7 @@ index_cube <-  function(
     }
   }
 
-  gdalcubes_options(threads = threads, progress = verbose)
+  gdalcubes_options(parallel = threads, progress = verbose)
 
   if(is.null(DB_path)){
     col = create_image_collection(files, format)

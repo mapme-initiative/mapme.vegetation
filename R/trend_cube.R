@@ -93,7 +93,7 @@ trend_cube <- function(
 
   . = NULL
   # TODO: checking inputs
-  if(!all(file.exists(files))) stop("Some files seam not to exist.")
+  if(!all(file.exists(files))) stop("Some files seem not to exist.")
   assert_that(is.dir(outdir))
   assert_that(is.number(dx))
   assert_that(is.number(dy))
@@ -112,7 +112,7 @@ trend_cube <- function(
               msg = paste0("Aggregation ", resampling, " not a valid aggregation method."))
 
   # create image collection and cubeview
-  gdalcubes_options(threads = threads, progress = verbose)
+  gdalcubes_options(parallel = threads, progress = verbose)
   col = create_image_collection(files, date_time = times, band_names = bands)
 
   if(is.null(bbox)){
@@ -154,7 +154,7 @@ trend_cube <- function(
 
   # set trend function
   if(is.null(trend_function)) {
-    message("No smoothing function specified.")
+    message("No trend function specified.")
     message("Using Mann-Kendall test with standard parameters.")
 
     trend_function = function(x){

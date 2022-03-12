@@ -7,7 +7,7 @@
 #' @param files Input raster files
 #' @param times Input dates
 #' @param bands Input band names
-#' @param zonalstat Zonal stats to calculate
+#' @param zonalfuns A named list with functions for zonal statistics as elements
 #' @param bbox Bounding Box
 #' @param after Date after
 #' @param before Date before
@@ -23,7 +23,7 @@
 #' @return A \code{sf} object in long format with columns for the specified zonal statistics,
 #'  and rows for each feature and input time.
 #' @export extract_zonalstats
-#' @importFrom gdalcubes gdalcubes_options create_image_collection extent cube_view raster_cube zonal_statistics
+#' @importFrom gdalcubes gdalcubes_options create_image_collection extent cube_view raster_cube extract_geom
 #' @importFrom sf st_transform st_crs st_zm st_bbox st_as_sf st_drop_geometry st_write
 #' @importFrom magrittr %>%
 #' @importFrom dplyr left_join
@@ -41,7 +41,7 @@ extract_zonalstats <- function(aoi = NULL,
                                files = NULL,
                                times,
                                bands,
-                               zonalstat,
+                               zonalfuns,
                                bbox,
                                after,
                                before,
@@ -55,12 +55,6 @@ extract_zonalstats <- function(aoi = NULL,
                                threads = 1,
                                ...){
 
-  if(zonalstat == "all") zonalstat =  c("min", "max", "mean", "median", "count", "sum", "prod", "var","sd")
-
-  if(!all(zonalstat %in% c("min", "max", "mean", "median", "count", "sum", "prod", "var","sd"))){
-    stop(paste0('Selected aggregation method for zonal statistics not supported\n',
-                'Choose one of "min", "max", "mean", "median", "count", "sum", "prod", "var","sd"'))
-  }
   .check_times(times)
 
   if (!requireNamespace("stars", quietly = TRUE))
@@ -68,7 +62,7 @@ extract_zonalstats <- function(aoi = NULL,
 
 
   # initiate new collection
-  gdalcubes_options(threads = threads)
+  gdalcubes_options(parallel = threads)
   col = create_image_collection(files, date_time = times, band_names = bands)
   extent = extent(col)
   if(!identical(st_crs(aoi), st_crs(srs))){
@@ -84,15 +78,17 @@ extract_zonalstats <- function(aoi = NULL,
                        aggregation = aggregation,
                        resampling = resampling)
 
-  term = expand.grid(bands, zonalstat)
-  term = sort(paste(term$Var2, "(", term$Var1, ")", sep = ""))
-  raster_cube(col, cubeview) %>%
-    zonal_statistics(geom = aoi, expr = term, as_stars = TRUE) -> stats
-
-  stats = st_as_sf(stats, long = T)
-  aoi_meta = st_drop_geometry(aoi)
-  stats[idcol] = rep(unlist(aoi_meta[idcol]), times = length(unique(stats$time)))
-  stats = left_join(stats, aoi_meta, by = idcol)
+  stat_names = names(zonalfuns)
+  stats = lapply(1:length(zonalfuns), function(i){
+    out = raster_cube(col, cubeview) %>%
+      extract_geom(sf = aoi, FUN = zonalfuns[[i]])
+    out$stat = stat_names[i]
+    out
+  })
+  stats = do.call(rbind, stats)
+  stats[idcol] = rep(unlist(st_drop_geometry(aoi)[idcol]), times = length(unique(stats$time)))
+  stats = st_as_sf(left_join(stats, aoi, by = idcol))
+  stats$FID = NULL
 
   if(!is.null(outpath)){
     st_write(stats, dsn = outpath, ...)
