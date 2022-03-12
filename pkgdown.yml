@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   cloudmasking: cloudmasking.html
@@ -11,5 +11,5 @@ articles:
   trends: trends.html
   workflow: workflow.html
   zonalstats: zonalstats.html
-last_built: 2021-11-24T11:32Z
+last_built: 2022-03-12T13:44Z
 

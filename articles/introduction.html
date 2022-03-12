@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
       </span>
     </div>
 
@@ -48,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -99,7 +101,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction</h1>
             
-            <h4 class="date">Last modified: 2021-11-24</h4>
+            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
       
       
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -108,20 +110,20 @@
 
     
     
-<div id="objectives" class="section level2">
-<h2 class="hasAnchor">
-<a href="#objectives" class="anchor"></a>Objectives</h2>
+<div class="section level2">
+<h2 id="objectives">Objectives<a class="anchor" aria-label="anchor" href="#objectives"></a>
+</h2>
 <p>mapme.vegetation facilitates two important tasks: first, it can be used to create the so called „input data“ (or „predictor variables“) that are needed to perform supervised image classification and to create land use / land cover (LULC) maps, based on remote sensing images. This task will be performed in the <code>{mapme.classification}</code> package. Second, <code>{mapme.vegetation}</code> can be used to perform a spatial assessment of vegetation cover change in your study area. To this end, it provides comprehensive functionality to perform vegetation trend and before-after change assessments, which can be the basis for diff-in-diff analysis, to give one example.</p>
-<p><code>{mapme.vegetation}</code> is meant for users with at least some basic GIS and Remote Sensing background. It supports the creation of a harmonized timeseries based on optical Earth Observation (EO) satellite imagery. Users will need at least basic knowledge regarding the concepts behind operating, (pre-) processing and analyzing EO data. Currently, only Sentinel-2 L2A (top of canopy reflectance values) data are supported. These data are retrieved from an open access <a href="https://registry.opendata.aws/sentinel-2/">AWS bucket</a> via the <a href="https://stacspec.org/">STAC API</a> that we can communicate with through the <code>{<a href="https://cran.r-project.org/web/packages/rstac/index.html">rstac</a>}</code>. By using the <a href="https://aria2.github.io/">aria2</a> downloader we can substantially speed up download time. Later on, images are processed locally to create a harmonized time series of surface reflectance and vegetation indices. In order to efficiently mask cloudy pixels we rely on <a href="https://grass.osgeo.org/">GRASS GIS</a> which we can use via the <code>{<a href="https://cran.r-project.org/web/packages/rgrass7/index.html">rgrass7</a>}.</code></p>
+<p><code>{mapme.vegetation}</code> is meant for users with at least some basic GIS and Remote Sensing background. It supports the creation of a harmonized timeseries based on optical Earth Observation (EO) satellite imagery. Users will need at least basic knowledge regarding the concepts behind operating, (pre-) processing and analyzing EO data. Currently, only Sentinel-2 L2A (top of canopy reflectance values) data are supported. These data are retrieved from an open access <a href="https://registry.opendata.aws/sentinel-2/" class="external-link">AWS bucket</a> via the <a href="https://stacspec.org/" class="external-link">STAC API</a> that we can communicate with through the <code>{<a href="https://cran.r-project.org/web/packages/rstac/index.html" class="external-link">rstac</a>}</code>. By using the <a href="https://aria2.github.io/" class="external-link">aria2</a> downloader we can substantially speed up download time. Later on, images are processed locally to create a harmonized time series of surface reflectance and vegetation indices. In order to efficiently mask cloudy pixels we rely on <a href="https://grass.osgeo.org/" class="external-link">GRASS GIS</a> which we can use via the <code>{<a href="https://cran.r-project.org/web/packages/rgrass7/index.html" class="external-link">rgrass7</a>}.</code></p>
 </div>
-<div id="mapme-vegetation-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mapme-vegetation-package" class="anchor"></a>mapme.vegetation package</h2>
+<div class="section level2">
+<h2 id="mapme-vegetation-package">mapme.vegetation package<a class="anchor" aria-label="anchor" href="#mapme-vegetation-package"></a>
+</h2>
 <p><code>mapme.vegetation</code> eases the process of establishing a harmonized timeseries from multiple satellite observations. Single observations of a certain region on the Earth’s surface from optical sensors might be obstructed by e.g. extensive cloud cover. Polar-orbiting satellites like Sentinel-2 nowadays have high revisit frequency allowing us to obtain single images every 4 to 10 days for the same location. In order to harness this information richness <code>mapme.vegetation</code> provides several routines to consistently process satellite images to derive a dataset which is ready for analysis. These routines include the masking of cloud pixels, calculation of vegetation indices, filling the gaps for missing information and smoothing of the resulting signal. With <code>mapme.vegetation</code> these processes are easy to implement and highly customizable for specific user needs. In most cases, however, the default settings allows users to seamlessly create an analysis-ready timeseries based on Sentinel-2 for any location on the Earth.</p>
 </div>
-<div id="functionalities" class="section level2">
-<h2 class="hasAnchor">
-<a href="#functionalities" class="anchor"></a>Functionalities</h2>
+<div class="section level2">
+<h2 id="functionalities">Functionalities<a class="anchor" aria-label="anchor" href="#functionalities"></a>
+</h2>
 <p>Currently, the package offers several functionalities, which should ideally be used in a consecutive manner in order to realize the image preparation workflow:</p>
 <ul>
 <li>download Sentinel-2 images for a space-time location</li>
@@ -133,23 +135,23 @@
 <li>optionally conduct a trend analysis or pre-post-comparisons</li>
 </ul>
 </div>
-<div id="inputs-outputs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#inputs-outputs" class="anchor"></a>Inputs, Outputs</h2>
+<div class="section level2">
+<h2 id="inputs-outputs">Inputs, Outputs<a class="anchor" aria-label="anchor" href="#inputs-outputs"></a>
+</h2>
 <ul>
-<li>an area of interest, usually in form of an ESRI Shapefile, read into the R session as an sf object with the <code>{<a href="https://cran.r-project.org/web/packages/sf/index.html">sf</a>}</code> package. Additionally, the temporal extent and the relevant bands of Sentinel-2 needs to be specified. User’s can chosse between a high number of vegetation indices (VI) to be calculated based on the input data.</li>
+<li>an area of interest, usually in form of an ESRI Shapefile, read into the R session as an sf object with the <code>{<a href="https://cran.r-project.org/web/packages/sf/index.html" class="external-link">sf</a>}</code> package. Additionally, the temporal extent and the relevant bands of Sentinel-2 needs to be specified. User’s can chosse between a high number of vegetation indices (VI) to be calculated based on the input data.</li>
 <li>the spatial and temporal resoultion of the target data set. User’s can specify these values so that the output data best fits the project’s needs.</li>
 <li>the processed raster files are outputted as multi-bands GeoTIFFs</li>
 <li>additionally, aggregates, zonal-statistics and pre-post comparisons can be made</li>
 </ul>
 </div>
-<div id="limitations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#limitations" class="anchor"></a>Limitations</h2>
+<div class="section level2">
+<h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
+</h2>
 <ul>
 <li><p>potential limitations arise from the fact that at the time being, <code>{mapme.vegetation}</code> uses data from the AWS bucket. Currently, only processed Sentinel-2 data are available, though it is planned to support more satellite missions that will be made available via the STAC API by different data provides. That means that globally data is only available starting from January, 2017</p></li>
-<li><p>Sentinel-2 data at AWS are processed COGs, that means the data can <strong>not</strong> be used as standard input to tools such as ESA’s <a href="https://step.esa.int/main/toolboxes/snap/">SNAP</a> toolbox.</p></li>
-<li><p>most of the implemented functionality is pixel-based by design. Focal operations currently are not supported, mainly because <code>{<a href="https://cran.r-project.org/web/packages/gdalcubes/index.html">gdalcubes</a>} </code> is missing such functionality. That means that operations that consider the spatial neighborhood of a pixel currently are not supported.</p></li>
+<li><p>Sentinel-2 data at AWS are processed COGs, that means the data can <strong>not</strong> be used as standard input to tools such as ESA’s <a href="https://step.esa.int/main/toolboxes/snap/" class="external-link">SNAP</a> toolbox.</p></li>
+<li><p>most of the implemented functionality is pixel-based by design. Focal operations currently are not supported, mainly because <code>{<a href="https://cran.r-project.org/web/packages/gdalcubes/index.html" class="external-link">gdalcubes</a>} </code> is missing such functionality. That means that operations that consider the spatial neighborhood of a pixel currently are not supported.</p></li>
 </ul>
 <p>We are planning to add new features and to extend the functionality of <code>{mapme.vegetation}</code>, and to address these limitations best possible.</p>
 </div>
@@ -166,11 +168,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://dariusgoergen.com/">Darius Görgen</a>.</p>
+  <p></p>
+<p>Developed by <a href="http://dariusgoergen.com/" class="external-link">Darius Görgen</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -178,6 +182,8 @@
 
   
 
+
+  
 
   </body>
 </html>
