@@ -119,9 +119,15 @@ scl_buffer <- function(
     tmpname = tempfile(fileext = ".tif")
     inname = scl_file
     term = paste(paste("1*(A==", mask_values, ")", sep = ""), collapse = "+")
-    rcl_command = sprintf('gdal_calc.py -A %s --outfile=%s --calc="%s"',
-                          inname, tmpname, term)
-    system(rcl_command, intern = T)
+
+    if(Sys.info()["sysname"] == "Windows") {
+      command = sprintf('gdal_calc -A %s --outfile=%s --calc="%s"',
+                        inname, tmpname, term)
+    } else {
+      command = sprintf('gdal_calc.py -A %s --outfile=%s --calc="%s"',
+                        inname, tmpname, term)
+    }
+    system2(command)
 
     gisdb = tempfile()
     location = file.path(gisdb, "temploc")
