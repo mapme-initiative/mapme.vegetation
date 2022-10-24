@@ -127,7 +127,7 @@ scl_buffer <- function(
       command = sprintf('gdal_calc.py -A %s --outfile=%s --calc="%s"',
                         inname, tmpname, term)
     }
-    system2(command)
+    system(command, intern = TRUE)
 
     gisdb = tempfile()
     location = file.path(gisdb, "temploc")
