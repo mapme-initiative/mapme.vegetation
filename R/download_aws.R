@@ -108,7 +108,7 @@ download_aws <- function(collection = "sentinel-s2-l2a-cogs",
     if(verbose) message("No spatial extent specified. Setting to global")
     bbox = c(-180, -90, 180, 90)
   }
-  if(class(bbox) == "bbox"){
+  if(inherits(bbox, "bbox")){
     bbox = as.numeric(bbox)
   }
 

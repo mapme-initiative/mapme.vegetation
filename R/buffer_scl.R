@@ -37,12 +37,12 @@
 #' \emph{License:} GPL-3
 
 scl_buffer <- function(
-  scl_files,
-  mask_values,
-  mask_buffer,
-  grass_bin,
-  outdir,
-  threads){
+    scl_files,
+    mask_values,
+    mask_buffer,
+    grass_bin,
+    outdir,
+    threads){
 
   if(threads>1){
     cl <- makeCluster(threads)
@@ -106,11 +106,11 @@ scl_buffer <- function(
 #' \cr
 #' \emph{License:} GPL-3
 .scl <- function(
-  scl_file,
-  outdir,
-  mask_values,
-  mask_buffer,
-  grass_bin
+    scl_file,
+    outdir,
+    mask_values,
+    mask_buffer,
+    grass_bin
 ){
 
   outname = file.path(outdir, basename(scl_file))
@@ -127,9 +127,8 @@ scl_buffer <- function(
     location = file.path(gisdb, "temploc")
     grass = findGRASS(grass_bin)
     grass = linkGRASS7(tmpname,
-                       gisdbase = gisdb,
-                       location = location,
-                       default_GRASS7 = grass)
+                      gisdbase = gisdb,
+                      location = location)
     execGRASS("r.import", input = tmpname, output = "tmpraster")
     execGRASS("r.buffer", input = "tmpraster", distances = mask_buffer, output = "buffered", flags = "z")
     writeLines(" 0 = NULL \n 1 = 1 \n 2 = 1", con = file.path(gisdb, "rules.txt"))

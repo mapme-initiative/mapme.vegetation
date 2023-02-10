@@ -202,7 +202,7 @@ compare_epochs <- function(
   if(is.character(epoch1_files) & is.character(epoch2_files)){
     epoch1 = rast(epoch1_files)
     epoch2 = rast(epoch2_files)
-  } else if(class(epoch1_files) == "SpatRaster" & class(epoch2_files) == "SpatRaster"){
+  } else if(inherits(epoch1_files, "SpatRaster") & inherits(epoch2_files, "SpatRaster")){
     epoch1 = epoch1_files
     epoch2 = epoch2_files
   } else {

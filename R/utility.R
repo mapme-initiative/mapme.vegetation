@@ -236,7 +236,7 @@
 #' @export
 #' @keywords internal
 #'
-#' @importFrom rstac assets_download items_bands
+#' @importFrom rstac assets_download items_assets
 #' @importFrom stringr str_sub str_detect
 #' @importFrom tools file_ext
 #' @author Darius Görgen (MapTailor Geospatial Consulting GbR) \email{info@maptailor.net}
@@ -265,8 +265,8 @@
   # check availability for all requested assets
   if(!is.null(assets)){
     available_assets = items %>%
-      items_bands()
-
+        items_assets()
+    
     if(!all(assets %in% available_assets[[1]])){
       missing = assets[which(!assets %in% available_assets[[1]])]
       message(paste0("Asset(s) ", paste(missing, sep = ", "), " not available."))
