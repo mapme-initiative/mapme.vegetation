@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="indices_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculate Indices</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>indices.Rmd</code></div>
@@ -114,160 +115,209 @@
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span>
-<span class="co">#&gt; terra 1.5.21</span>
-<span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; terra 1.7.3</span></span>
+<span><span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="available-indices">Available Indices<a class="anchor" aria-label="anchor" href="#available-indices"></a>
 </h2>
-<p>In this vignette <code>mapme.vegetation</code> functionality to derive a dense time series of vegetation indices is presented. The package comes with a list of over 100 indices that can be calculated for Sentinel 2. Issue the following command to inspect available indices.</p>
+<p>In this vignette <code>mapme.vegetation</code> functionality to
+derive a dense time series of vegetation indices is presented. The
+package comes with a list of over 100 indices that can be calculated for
+Sentinel 2. Issue the following command to inspect available
+indices.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/check_indices.html">check_indices</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;                                       longname     name</span>
-<span class="co">#&gt; 1           Aerosol free vegetation index 1600 AFRI1600</span>
-<span class="co">#&gt; 2           Aerosol free vegetation index 2100 AFRI2100</span>
-<span class="co">#&gt; 3                Anthocyanin reflectance index      ARI</span>
-<span class="co">#&gt; 4                     Ashburn Vegetation Index      AVI</span>
-<span class="co">#&gt; 5 Atmospherically Resistant Vegetation Index 2    ARVI2</span>
-<span class="co">#&gt; 6     Blue-wide dynamic range vegetation index   BWDRVI</span>
-<span class="co">#&gt;                                                 link</span>
-<span class="co">#&gt; 1 http://www.indexdatabase.de/db/i-single.php?id=393</span>
-<span class="co">#&gt; 2 http://www.indexdatabase.de/db/i-single.php?id=395</span>
-<span class="co">#&gt; 3 http://www.indexdatabase.de/db/i-single.php?id=214</span>
-<span class="co">#&gt; 4 http://www.indexdatabase.de/db/i-single.php?id=574</span>
-<span class="co">#&gt; 5 http://www.indexdatabase.de/db/i-single.php?id=396</span>
-<span class="co">#&gt; 6 http://www.indexdatabase.de/db/i-single.php?id=136</span>
-<span class="co">#&gt;                                      s2_formula</span>
-<span class="co">#&gt; 1 (band_8-0.66*(band_11)/(band_8+0.66*band_11))</span>
-<span class="co">#&gt; 2  (band_8-0.5*(band_12)/(band_8+0.56*band_12))</span>
-<span class="co">#&gt; 3                     (1)/(band_3)-(1)/(band_5)</span>
-<span class="co">#&gt; 4                             2.0*band_9-band_4</span>
-<span class="co">#&gt; 5  -0.18+1.17*((band_8-band_4)/(band_8+band_4))</span>
-<span class="co">#&gt; 6       (0.1*band_8-band_2)/(0.1*band_8+band_2)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/check_indices.html">check_indices</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                       longname     name</span></span>
+<span><span class="co">#&gt; 1           Aerosol free vegetation index 1600 AFRI1600</span></span>
+<span><span class="co">#&gt; 2           Aerosol free vegetation index 2100 AFRI2100</span></span>
+<span><span class="co">#&gt; 3                Anthocyanin reflectance index      ARI</span></span>
+<span><span class="co">#&gt; 4                     Ashburn Vegetation Index      AVI</span></span>
+<span><span class="co">#&gt; 5 Atmospherically Resistant Vegetation Index 2    ARVI2</span></span>
+<span><span class="co">#&gt; 6     Blue-wide dynamic range vegetation index   BWDRVI</span></span>
+<span><span class="co">#&gt;                                                 link</span></span>
+<span><span class="co">#&gt; 1 http://www.indexdatabase.de/db/i-single.php?id=393</span></span>
+<span><span class="co">#&gt; 2 http://www.indexdatabase.de/db/i-single.php?id=395</span></span>
+<span><span class="co">#&gt; 3 http://www.indexdatabase.de/db/i-single.php?id=214</span></span>
+<span><span class="co">#&gt; 4 http://www.indexdatabase.de/db/i-single.php?id=574</span></span>
+<span><span class="co">#&gt; 5 http://www.indexdatabase.de/db/i-single.php?id=396</span></span>
+<span><span class="co">#&gt; 6 http://www.indexdatabase.de/db/i-single.php?id=136</span></span>
+<span><span class="co">#&gt;                                      s2_formula</span></span>
+<span><span class="co">#&gt; 1 (band_8-0.66*(band_11)/(band_8+0.66*band_11))</span></span>
+<span><span class="co">#&gt; 2  (band_8-0.5*(band_12)/(band_8+0.56*band_12))</span></span>
+<span><span class="co">#&gt; 3                     (1)/(band_3)-(1)/(band_5)</span></span>
+<span><span class="co">#&gt; 4                             2.0*band_9-band_4</span></span>
+<span><span class="co">#&gt; 5  -0.18+1.17*((band_8-band_4)/(band_8+band_4))</span></span>
+<span><span class="co">#&gt; 6       (0.1*band_8-band_2)/(0.1*band_8+band_2)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="calculate-indices">Calculate Indices<a class="anchor" aria-label="anchor" href="#calculate-indices"></a>
 </h2>
-<p>In order to specify one or multiple indices refer to the short name found in the column <code>name</code>. As a prerequisite for calculating indices we assume that S2 data for a given spatio-temporal AOI has been downloaded as explained in the vignette xx. Additionally, we assume that the SCL has been enriched using the functionality explained in the vignette xx. It is however possible to skip the cloud mask buffering and proceed with the original SCL files. First, let’s read in the necessary files and declare some arguments for the index calculation.</p>
+<p>In order to specify one or multiple indices refer to the short name
+found in the column <code>name</code>. As a prerequisite for calculating
+indices we assume that S2 data for a given spatio-temporal AOI has been
+downloaded as explained in the vignette xx. Additionally, we assume that
+the SCL has been enriched using the functionality explained in the
+vignette xx. It is however possible to skip the cloud mask buffering and
+proceed with the original SCL files. First, let’s read in the necessary
+files and declare some arguments for the index calculation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/s2a"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">scl_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/scl"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span>
-<span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span>
-
-<span class="va">dx</span> <span class="op">=</span> <span class="fl">200</span> <span class="co"># desired outcome resolution in x direction</span>
-<span class="va">dy</span> <span class="op">=</span> <span class="fl">200</span> <span class="co"># desired outcome resolution in y direction</span>
-<span class="va">dt</span> <span class="op">=</span> <span class="st">"P14D"</span> <span class="co"># desired temporal resolution - here 1 month</span>
-<span class="va">srs</span> <span class="op">=</span> <span class="st">"EPSG:32638"</span> <span class="co"># desired CRS of the outcome raster - bbox must be specified in that crs</span>
-<span class="va">after</span> <span class="op">=</span> <span class="st">"2017-05-01"</span> <span class="co"># start date</span>
-<span class="va">before</span> <span class="op">=</span> <span class="st">"2017-07-31"</span> <span class="co"># end date</span>
-<span class="va">index</span> <span class="op">=</span> <span class="st">"NDVI"</span> <span class="co"># index to calculate, can specify multiple indices</span>
-<span class="va">aggregation</span> <span class="op">=</span> <span class="st">"max"</span> <span class="co"># aggregation method for scene within the same time step</span>
-<span class="va">resampling</span> <span class="op">=</span> <span class="st">"cubic"</span> <span class="co"># GDAL resampling method to match the outcome grid size</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"ndvi"</span><span class="op">)</span><span class="op">)</span> <span class="co"># create output directories</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"filled"</span><span class="op">)</span><span class="op">)</span> <span class="co"># create output directories</span>
-<span class="va">label</span> <span class="op">=</span> <span class="st">"NDVI-"</span> <span class="co"># appended to filename</span>
-<span class="va">mask_layer</span> <span class="op">=</span> <span class="st">"SCL"</span> <span class="co"># which band in the data cube is used as mask</span>
-<span class="va">mask_values</span> <span class="op">=</span> <span class="fl">1</span> <span class="co"># which values to mask out</span>
-<span class="va">mask_invert</span> <span class="op">=</span> <span class="cn">F</span> <span class="co"># logical if mask_values should be masked (TRUE) or kept (FALSE)</span></code></pre></div>
-<p>With this prerequisites we can nearly start to calculate the NDVI. Note, however, that we set the <code>mask_value = 1</code> to account for our enriched cloud mask. That is why we should exchange the original SCL files with our new SCL files.</p>
+<code class="sourceCode R"><span><span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/s2a"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">scl_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/scl"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dx</span> <span class="op">=</span> <span class="fl">200</span> <span class="co"># desired outcome resolution in x direction</span></span>
+<span><span class="va">dy</span> <span class="op">=</span> <span class="fl">200</span> <span class="co"># desired outcome resolution in y direction</span></span>
+<span><span class="va">dt</span> <span class="op">=</span> <span class="st">"P14D"</span> <span class="co"># desired temporal resolution - here 1 month</span></span>
+<span><span class="va">srs</span> <span class="op">=</span> <span class="st">"EPSG:32638"</span> <span class="co"># desired CRS of the outcome raster - bbox must be specified in that crs</span></span>
+<span><span class="va">after</span> <span class="op">=</span> <span class="st">"2017-05-01"</span> <span class="co"># start date</span></span>
+<span><span class="va">before</span> <span class="op">=</span> <span class="st">"2017-07-31"</span> <span class="co"># end date</span></span>
+<span><span class="va">index</span> <span class="op">=</span> <span class="st">"NDVI"</span> <span class="co"># index to calculate, can specify multiple indices</span></span>
+<span><span class="va">aggregation</span> <span class="op">=</span> <span class="st">"max"</span> <span class="co"># aggregation method for scene within the same time step</span></span>
+<span><span class="va">resampling</span> <span class="op">=</span> <span class="st">"cubic"</span> <span class="co"># GDAL resampling method to match the outcome grid size</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"ndvi"</span><span class="op">)</span><span class="op">)</span> <span class="co"># create output directories</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"filled"</span><span class="op">)</span><span class="op">)</span> <span class="co"># create output directories</span></span>
+<span><span class="va">label</span> <span class="op">=</span> <span class="st">"NDVI-"</span> <span class="co"># appended to filename</span></span>
+<span><span class="va">mask_layer</span> <span class="op">=</span> <span class="st">"SCL"</span> <span class="co"># which band in the data cube is used as mask</span></span>
+<span><span class="va">mask_values</span> <span class="op">=</span> <span class="fl">1</span> <span class="co"># which values to mask out</span></span>
+<span><span class="va">mask_invert</span> <span class="op">=</span> <span class="cn">F</span> <span class="co"># logical if mask_values should be masked (TRUE) or kept (FALSE)</span></span></code></pre></div>
+<p>With this prerequisites we can nearly start to calculate the NDVI.
+Note, however, that we set the <code>mask_value = 1</code> to account
+for our enriched cloud mask. That is why we should exchange the original
+SCL files with our new SCL files.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">s2_files</span> <span class="op">=</span> <span class="va">s2_files</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"SCL"</span>, <span class="va">s2_files</span><span class="op">)</span><span class="op">]</span>
-<span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">s2_files</span>, <span class="va">scl_files</span><span class="op">)</span></code></pre></div>
-<p>Now we can start calculating the index. We will use a collection definition which comes with the <code>mapme.vegetation</code> package to let <code>gdalcubes</code> how to interpret the filenames from AWS. That way, we are sure that the spatio-temporal extent of each single file is rightly interpreted.</p>
+<code class="sourceCode R"><span><span class="va">s2_files</span> <span class="op">=</span> <span class="va">s2_files</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"SCL"</span>, <span class="va">s2_files</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">s2_files</span>, <span class="va">scl_files</span><span class="op">)</span></span></code></pre></div>
+<p>Now we can start calculating the index. We will use a collection
+definition which comes with the <code>mapme.vegetation</code> package to
+let <code>gdalcubes</code> how to interpret the filenames from AWS. That
+way, we are sure that the spatio-temporal extent of each single file is
+rightly interpreted.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">raw_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/index_cube.html">index_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">s2_files</span>, 
-                      format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sentinel2_l2a_cog.json"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, 
-                      dx <span class="op">=</span> <span class="va">dx</span>, 
-                      dy <span class="op">=</span> <span class="va">dy</span>, 
-                      dt <span class="op">=</span> <span class="va">dt</span>, 
-                      srs <span class="op">=</span> <span class="va">srs</span>, 
-                      bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                      after <span class="op">=</span> <span class="va">after</span>, 
-                      before <span class="op">=</span> <span class="va">before</span>, 
-                      aggregation <span class="op">=</span> <span class="va">aggregation</span>, 
-                      resampling <span class="op">=</span> <span class="va">resampling</span>, 
-                      index <span class="op">=</span> <span class="va">index</span>, 
-                      label <span class="op">=</span> <span class="va">label</span>, 
-                      outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"ndvi"</span><span class="op">)</span>, 
-                      overwrite <span class="op">=</span> <span class="cn">TRUE</span>,
-                      mask_layer <span class="op">=</span> <span class="va">mask_layer</span>, 
-                      mask_values <span class="op">=</span> <span class="va">mask_values</span>,
-                      mask_invert <span class="op">=</span> <span class="va">mask_invert</span>,
-                      creation_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"COMPRESS"</span> <span class="op">=</span> <span class="st">"DEFLATE"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Current cube view is:</span>
-<span class="co">#&gt; A data cube view object</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Dimensions:</span>
-<span class="co">#&gt;                low             high count pixel_size</span>
-<span class="co">#&gt; t       2017-05-01       2017-08-06     7       P14D</span>
-<span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span>
-<span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SRS: "EPSG:32638"</span>
-<span class="co">#&gt; Temporal aggregation method: "max"</span>
-<span class="co">#&gt; Spatial resampling method: "cubic"</span></code></pre></div>
-<p>Let’s inspect the returned output. It is a list with three objects. The first object is called <code>files</code> and contains the path to the files. The second object is called <code>band_order</code> and indicates the names and order of the bands in the output files. This can be very important when multiple indices are calculated at once because <code>gdalcubes</code> will return the bands in alphabetical order. The last object is called <code>time</code> and indicates the timestamp for each of the output files. Together this information can be used for subsequent processing.</p>
+<code class="sourceCode R"><span><span class="va">raw_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/index_cube.html">index_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">s2_files</span>, </span>
+<span>                      format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sentinel2_l2a_cog.json"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, </span>
+<span>                      dx <span class="op">=</span> <span class="va">dx</span>, </span>
+<span>                      dy <span class="op">=</span> <span class="va">dy</span>, </span>
+<span>                      dt <span class="op">=</span> <span class="va">dt</span>, </span>
+<span>                      srs <span class="op">=</span> <span class="va">srs</span>, </span>
+<span>                      bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                      after <span class="op">=</span> <span class="va">after</span>, </span>
+<span>                      before <span class="op">=</span> <span class="va">before</span>, </span>
+<span>                      aggregation <span class="op">=</span> <span class="va">aggregation</span>, </span>
+<span>                      resampling <span class="op">=</span> <span class="va">resampling</span>, </span>
+<span>                      index <span class="op">=</span> <span class="va">index</span>, </span>
+<span>                      label <span class="op">=</span> <span class="va">label</span>, </span>
+<span>                      outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"ndvi"</span><span class="op">)</span>, </span>
+<span>                      overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                      mask_layer <span class="op">=</span> <span class="va">mask_layer</span>, </span>
+<span>                      mask_values <span class="op">=</span> <span class="va">mask_values</span>,</span>
+<span>                      mask_invert <span class="op">=</span> <span class="va">mask_invert</span>,</span>
+<span>                      creation_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"COMPRESS"</span> <span class="op">=</span> <span class="st">"DEFLATE"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Current cube view is:</span></span>
+<span><span class="co">#&gt; A data cube view object</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dimensions:</span></span>
+<span><span class="co">#&gt;                low             high count pixel_size</span></span>
+<span><span class="co">#&gt; t       2017-05-01       2017-08-06     7       P14D</span></span>
+<span><span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span></span>
+<span><span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SRS: "EPSG:32638"</span></span>
+<span><span class="co">#&gt; Temporal aggregation method: "max"</span></span>
+<span><span class="co">#&gt; Spatial resampling method: "cubic"</span></span></code></pre></div>
+<p>Let’s inspect the returned output. It is a list with three objects.
+The first object is called <code>files</code> and contains the path to
+the files. The second object is called <code>band_order</code> and
+indicates the names and order of the bands in the output files. This can
+be very important when multiple indices are calculated at once because
+<code>gdalcubes</code> will return the bands in alphabetical order. The
+last object is called <code>time</code> and indicates the timestamp for
+each of the output files. Together this information can be used for
+subsequent processing.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">)</span>
-<span class="co">#&gt; List of 3</span>
-<span class="co">#&gt;  $ files     : chr [1:7] "/tmp/RtmpRoGqnp/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/RtmpRoGqnp/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/RtmpRoGqnp/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/RtmpRoGqnp/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span>
-<span class="co">#&gt;  $ band_order: chr "NDVI"</span>
-<span class="co">#&gt;  $ time      : chr [1:7] "2017-05-01" "2017-05-15" "2017-05-29" "2017-06-12" ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 3</span></span>
+<span><span class="co">#&gt;  $ files     : chr [1:7] "/tmp/RtmpCwnIDw/mapme.vegetation/ndvi/NDVI-2017-05-01.tif" "/tmp/RtmpCwnIDw/mapme.vegetation/ndvi/NDVI-2017-05-15.tif" "/tmp/RtmpCwnIDw/mapme.vegetation/ndvi/NDVI-2017-05-29.tif" "/tmp/RtmpCwnIDw/mapme.vegetation/ndvi/NDVI-2017-06-12.tif" ...</span></span>
+<span><span class="co">#&gt;  $ band_order: chr "NDVI"</span></span>
+<span><span class="co">#&gt;  $ time      : chr [1:7] "2017-05-01" "2017-05-15" "2017-05-29" "2017-06-12" ...</span></span></code></pre></div>
 <p>Let’s visualize the NDVI raster files.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ndvi_ras</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ndvi_ras</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ndvi_ras</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ndvi_ras</span><span class="op">)</span></span></code></pre></div>
 <p><img src="indices_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>We see that we have some missing values during the first 14 day period of May as well as more extensive missing values for the period starting of May, 29th. Note that in the original resolution it is likely that there are more missing values. In order to be able to ship the example data sets with the package, the spatial resolution has been resampled to 100 meters, which is a reduction in spatial resolution of factor 10 for the band 4 and 8 that are used for the NDVI calculation. However, due to cloud cover, missing observations are actually quite frequent. The <code>mapme.vegetation</code> package offers functionality for to apply interpolation of missing values and smoothing of the resulting time series.</p>
+<p>We see that we have some missing values during the first 14 day
+period of May as well as more extensive missing values for the period
+starting of May, 29th. Note that in the original resolution it is likely
+that there are more missing values. In order to be able to ship the
+example data sets with the package, the spatial resolution has been
+resampled to 100 meters, which is a reduction in spatial resolution of
+factor 10 for the band 4 and 8 that are used for the NDVI calculation.
+However, due to cloud cover, missing observations are actually quite
+frequent. The <code>mapme.vegetation</code> package offers functionality
+for to apply interpolation of missing values and smoothing of the
+resulting time series.</p>
 </div>
 <div class="section level2">
 <h2 id="smoothing-a-time-series">Smoothing a Time Series<a class="anchor" aria-label="anchor" href="#smoothing-a-time-series"></a>
 </h2>
-<p>The default functionality is quite basic, applying linear interpolation and applying a Savitzkiy-Golay filter. In case you need a more sophisticated gap-filling strategy you can define your own function. The function receives the time series of each pixel and is expected to return the same number of pixels. Let’s consider the smoothing with the basic approach. We will set the chunking option to simultaneously process all 7 time-steps of our spatio-temporal extent. This is important so that the complete time series is available.</p>
+<p>The default functionality is quite basic, applying linear
+interpolation and applying a Savitzkiy-Golay filter. In case you need a
+more sophisticated gap-filling strategy you can define your own
+function. The function receives the time series of each pixel and is
+expected to return the same number of pixels. Let’s consider the
+smoothing with the basic approach. We will set the chunking option to
+simultaneously process all 7 time-steps of our spatio-temporal extent.
+This is important so that the complete time series is available.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,
-                        bands <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">band_order</span>, 
-                        times <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">time</span>,
-                        dx <span class="op">=</span> <span class="va">dx</span>, 
-                        dy <span class="op">=</span> <span class="va">dy</span>, 
-                        dt <span class="op">=</span> <span class="va">dt</span>, 
-                        srs <span class="op">=</span> <span class="va">srs</span>, 
-                        after <span class="op">=</span> <span class="va">after</span>, 
-                        before <span class="op">=</span> <span class="va">before</span>, 
-                        bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                        aggregation <span class="op">=</span> <span class="va">aggregation</span>, 
-                        resampling <span class="op">=</span> <span class="va">resampling</span>, 
-                        outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"filled"</span><span class="op">)</span>, 
-                        label <span class="op">=</span> <span class="va">label</span>,
-                        overwrite <span class="op">=</span> <span class="cn">TRUE</span>,
-                        chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span>,<span class="fl">100</span>,<span class="fl">100</span><span class="op">)</span>,
-                        creation_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"COMPRESS"</span> <span class="op">=</span> <span class="st">"DEFLATE"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Current cube view is:</span>
-<span class="co">#&gt; A data cube view object</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Dimensions:</span>
-<span class="co">#&gt;                low             high count pixel_size</span>
-<span class="co">#&gt; t       2017-05-01       2017-08-06     7       P14D</span>
-<span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span>
-<span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SRS: "EPSG:32638"</span>
-<span class="co">#&gt; Temporal aggregation method: "max"</span>
-<span class="co">#&gt; Spatial resampling method: "cubic"</span>
-<span class="co">#&gt; No smoothing function specified.</span>
-<span class="co">#&gt; Using Linear Interpolation and Savitzkiy-Golay-Filter with standard parameters.</span></code></pre></div>
-<p>Let’s visualize the resulting gap filled and smoothed raster files. We see that the missing values have been filled. Whether or not the default smoothing function is suitable for your use case is a question you have to answer for yourself. In the example section of <code><a href="../reference/smooth_cube.html">mapme.vegetation::smooth_cube</a></code> you will find the default. You can exchange that function by specifying a custom function with the <code>smoothing_function</code> argument.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="va">fill_ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/smooth_cube.html">smooth_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">files</span>,</span>
+<span>                        bands <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">band_order</span>, </span>
+<span>                        times <span class="op">=</span> <span class="va">raw_ndvi</span><span class="op">$</span><span class="va">time</span>,</span>
+<span>                        dx <span class="op">=</span> <span class="va">dx</span>, </span>
+<span>                        dy <span class="op">=</span> <span class="va">dy</span>, </span>
+<span>                        dt <span class="op">=</span> <span class="va">dt</span>, </span>
+<span>                        srs <span class="op">=</span> <span class="va">srs</span>, </span>
+<span>                        after <span class="op">=</span> <span class="va">after</span>, </span>
+<span>                        before <span class="op">=</span> <span class="va">before</span>, </span>
+<span>                        bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                        aggregation <span class="op">=</span> <span class="va">aggregation</span>, </span>
+<span>                        resampling <span class="op">=</span> <span class="va">resampling</span>, </span>
+<span>                        outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"filled"</span><span class="op">)</span>, </span>
+<span>                        label <span class="op">=</span> <span class="va">label</span>,</span>
+<span>                        overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span>,<span class="fl">100</span>,<span class="fl">100</span><span class="op">)</span>,</span>
+<span>                        creation_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"COMPRESS"</span> <span class="op">=</span> <span class="st">"DEFLATE"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Current cube view is:</span></span>
+<span><span class="co">#&gt; A data cube view object</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dimensions:</span></span>
+<span><span class="co">#&gt;                low             high count pixel_size</span></span>
+<span><span class="co">#&gt; t       2017-05-01       2017-08-06     7       P14D</span></span>
+<span><span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span></span>
+<span><span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SRS: "EPSG:32638"</span></span>
+<span><span class="co">#&gt; Temporal aggregation method: "max"</span></span>
+<span><span class="co">#&gt; Spatial resampling method: "cubic"</span></span>
+<span><span class="co">#&gt; No smoothing function specified.</span></span>
+<span><span class="co">#&gt; Using Linear Interpolation and Savitzkiy-Golay-Filter with standard parameters.</span></span></code></pre></div>
+<p>Let’s visualize the resulting gap filled and smoothed raster files.
+We see that the missing values have been filled. Whether or not the
+default smoothing function is suitable for your use case is a question
+you have to answer for yourself. In the example section of
+<code><a href="../reference/smooth_cube.html">mapme.vegetation::smooth_cube</a></code> you will find the default.
+You can exchange that function by specifying a custom function with the
+<code>smoothing_function</code> argument.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ndvi_ras2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">fill_ndvi</span><span class="op">$</span><span class="va">files</span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ndvi_ras2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ndvi_ras2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">fill_ndvi</span><span class="op">$</span><span class="va">files</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ndvi_ras2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="indices_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
   </div>
@@ -289,7 +339,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

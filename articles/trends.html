@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="trends_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Calculate Trends</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>trends.Rmd</code></div>
@@ -110,121 +111,176 @@
 
     
     
-<p>This tool measures the rate of change in vegetation productivity over time, based on vegetation indices from multi-temporal satellite observations. It calculates a linear regression at the pixel level to measure the trajectory of change in vegetation productivity over time for the period under analysis. A Mann-Kendall non-parametric significance test is then applied. This allows the user to consider, i.e. to map only significant changes that show a certain p-value (e.g. ≤ 0.05). Positive significant slopes would indicate potential improvement (e.g. vegetation gain), while negative significant slopes could be indicative of degradation (vegetation loss). Please note that it is always recommended to cross check and validate the results from this assessment with in-situ measurements, if available.</p>
-<p>In the following we will show how to calculate the trend in a time-series of vegetation indices and how to compare two different epochs, e.g. pre- and post-intervention period As a prerequisite we assume that you have already calculated a dense time-series of the index of your choice for the relevant timeframes. The example we are presenting here might not make a lot of sense of a analytic level, but it is only meant to introduce the functionality. Let’s get started by reading in our dense NDVI time-series and separate it into a rather random pre- and post-intervention period</p>
+<p>This tool measures the rate of change in vegetation productivity over
+time, based on vegetation indices from multi-temporal satellite
+observations. It calculates a linear regression at the pixel level to
+measure the trajectory of change in vegetation productivity over time
+for the period under analysis. A Mann-Kendall non-parametric
+significance test is then applied. This allows the user to consider,
+i.e. to map only significant changes that show a certain p-value (e.g. ≤
+0.05). Positive significant slopes would indicate potential improvement
+(e.g. vegetation gain), while negative significant slopes could be
+indicative of degradation (vegetation loss). Please note that it is
+always recommended to cross check and validate the results from this
+assessment with in-situ measurements, if available.</p>
+<p>In the following we will show how to calculate the trend in a
+time-series of vegetation indices and how to compare two different
+epochs, e.g. pre- and post-intervention period As a prerequisite we
+assume that you have already calculated a dense time-series of the index
+of your choice for the relevant timeframes. The example we are
+presenting here might not make a lot of sense of a analytic level, but
+it is only meant to introduce the functionality. Let’s get started by
+reading in our dense NDVI time-series and separate it into a rather
+random pre- and post-intervention period</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span>
-<span class="co">#&gt; terra 1.5.21</span>
-
-<span class="va">ndvi_files</span> <span class="op">=</span> <span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/filled"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">bands</span> <span class="op">=</span> <span class="st">"NDVI"</span>
-<span class="va">times</span> <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">ndvi_files</span><span class="op">)</span>, <span class="op">-</span><span class="fl">14</span>, <span class="op">-</span><span class="fl">5</span><span class="op">)</span>
-
-<span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span>
-<span class="va">aoi_utm</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span>
-<span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span>
-
-<span class="va">pre</span> <span class="op">=</span> <span class="va">ndvi_files</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>
-<span class="va">post</span> <span class="op">=</span> <span class="va">ndvi_files</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>
-<span class="va">times_pre</span> <span class="op">=</span> <span class="va">times</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>
-<span class="va">times_post</span> <span class="op">=</span> <span class="va">times</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>
-
-<span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
-<p>We will have to process each of these periods separately since the function will try to fit a trend for all the available time-steps at once. By default the trend will be estimated using the <code><a href="https://rdrr.io/pkg/trend/man/mk.test.html" class="external-link">trend::mk.test()</a></code> function which fits a simple linear trend. Two values are returned, that is the estimate of the slope of the linear trend as well as the p.value. Via the argument <code>filter_p</code> we can exclude pixels below a certain threshold. However, we will not apply this in this tutorial as we do not expect to find significant trends in this rather random time periods.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; terra 1.7.3</span></span>
+<span></span>
+<span><span class="va">ndvi_files</span> <span class="op">=</span> <span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/filled"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">bands</span> <span class="op">=</span> <span class="st">"NDVI"</span></span>
+<span><span class="va">times</span> <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">ndvi_files</span><span class="op">)</span>, <span class="op">-</span><span class="fl">14</span>, <span class="op">-</span><span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aoi_utm</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pre</span> <span class="op">=</span> <span class="va">ndvi_files</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
+<span><span class="va">post</span> <span class="op">=</span> <span class="va">ndvi_files</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span>
+<span><span class="va">times_pre</span> <span class="op">=</span> <span class="va">times</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span>
+<span><span class="va">times_post</span> <span class="op">=</span> <span class="va">times</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+<p>We will have to process each of these periods separately since the
+function will try to fit a trend for all the available time-steps at
+once. By default the trend will be estimated using the
+<code><a href="https://rdrr.io/pkg/trend/man/mk.test.html" class="external-link">trend::mk.test()</a></code> function which fits a simple linear trend.
+Two values are returned, that is the estimate of the slope of the linear
+trend as well as the p.value. Via the argument <code>filter_p</code> we
+can exclude pixels below a certain threshold. However, we will not apply
+this in this tutorial as we do not expect to find significant trends in
+this rather random time periods.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trend_pre</span> <span class="op">=</span> <span class="fu"><a href="../reference/trend_cube.html">trend_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">pre</span>, 
-                       bands <span class="op">=</span> <span class="va">bands</span>, 
-                       times <span class="op">=</span> <span class="va">times_pre</span>, 
-                       dx <span class="op">=</span> <span class="fl">200</span>, 
-                       dy <span class="op">=</span> <span class="fl">200</span>,
-                       dt <span class="op">=</span> <span class="st">"P14D"</span>,
-                       srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>,
-                       after <span class="op">=</span> <span class="va">times_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
-                       before <span class="op">=</span> <span class="va">times_pre</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,
-                       bbox <span class="op">=</span> <span class="va">bbox</span>,
-                       aggregation <span class="op">=</span> <span class="st">"max"</span>,
-                       resampling <span class="op">=</span> <span class="st">"cubic"</span>,
-                       chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,
-                       outdir <span class="op">=</span> <span class="va">rundir</span>,
-                       label <span class="op">=</span> <span class="st">"pre_"</span><span class="op">)</span>
-<span class="co">#&gt; A data cube view object</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Dimensions:</span>
-<span class="co">#&gt;                low             high count pixel_size</span>
-<span class="co">#&gt; t       2017-05-01       2017-06-25     4       P14D</span>
-<span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span>
-<span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SRS: "EPSG:32638"</span>
-<span class="co">#&gt; Temporal aggregation method: "max"</span>
-<span class="co">#&gt; Spatial resampling method: "cubic"</span>
-
-<span class="va">trend_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/trend_cube.html">trend_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">post</span>, 
-                        bands <span class="op">=</span> <span class="va">bands</span>, 
-                        times <span class="op">=</span> <span class="va">times_post</span>, 
-                        dx <span class="op">=</span> <span class="fl">200</span>, 
-                        dy <span class="op">=</span> <span class="fl">200</span>,
-                        dt <span class="op">=</span> <span class="st">"P14D"</span>,
-                        srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>,
-                        after <span class="op">=</span> <span class="va">times_post</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
-                        before <span class="op">=</span> <span class="va">times_post</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,
-                        bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                        aggregation <span class="op">=</span> <span class="st">"max"</span>,
-                        resampling <span class="op">=</span> <span class="st">"cubic"</span>,
-                        chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,
-                        outdir <span class="op">=</span> <span class="va">rundir</span>,
-                        label <span class="op">=</span> <span class="st">"post_"</span><span class="op">)</span>
-<span class="co">#&gt; A data cube view object</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Dimensions:</span>
-<span class="co">#&gt;                low             high count pixel_size</span>
-<span class="co">#&gt; t       2017-06-26       2017-08-06     3       P14D</span>
-<span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span>
-<span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; SRS: "EPSG:32638"</span>
-<span class="co">#&gt; Temporal aggregation method: "max"</span>
-<span class="co">#&gt; Spatial resampling method: "cubic"</span></code></pre></div>
-<p>Let’s visualize the trend results for both the pre- and post intervention period. Note that the first layer returned by the default trend function is the slope of the linear trend while the second layer defaults to the p-value.</p>
+<code class="sourceCode R"><span><span class="va">trend_pre</span> <span class="op">=</span> <span class="fu"><a href="../reference/trend_cube.html">trend_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">pre</span>, </span>
+<span>                       bands <span class="op">=</span> <span class="va">bands</span>, </span>
+<span>                       times <span class="op">=</span> <span class="va">times_pre</span>, </span>
+<span>                       dx <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>                       dy <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                       dt <span class="op">=</span> <span class="st">"P14D"</span>,</span>
+<span>                       srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>,</span>
+<span>                       after <span class="op">=</span> <span class="va">times_pre</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>                       before <span class="op">=</span> <span class="va">times_pre</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
+<span>                       bbox <span class="op">=</span> <span class="va">bbox</span>,</span>
+<span>                       aggregation <span class="op">=</span> <span class="st">"max"</span>,</span>
+<span>                       resampling <span class="op">=</span> <span class="st">"cubic"</span>,</span>
+<span>                       chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,</span>
+<span>                       outdir <span class="op">=</span> <span class="va">rundir</span>,</span>
+<span>                       label <span class="op">=</span> <span class="st">"pre_"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A data cube view object</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dimensions:</span></span>
+<span><span class="co">#&gt;                low             high count pixel_size</span></span>
+<span><span class="co">#&gt; t       2017-05-01       2017-06-25     4       P14D</span></span>
+<span><span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span></span>
+<span><span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SRS: "EPSG:32638"</span></span>
+<span><span class="co">#&gt; Temporal aggregation method: "max"</span></span>
+<span><span class="co">#&gt; Spatial resampling method: "cubic"</span></span>
+<span></span>
+<span><span class="va">trend_post</span> <span class="op">=</span> <span class="fu"><a href="../reference/trend_cube.html">trend_cube</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">post</span>, </span>
+<span>                        bands <span class="op">=</span> <span class="va">bands</span>, </span>
+<span>                        times <span class="op">=</span> <span class="va">times_post</span>, </span>
+<span>                        dx <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>                        dy <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>                        dt <span class="op">=</span> <span class="st">"P14D"</span>,</span>
+<span>                        srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>,</span>
+<span>                        after <span class="op">=</span> <span class="va">times_post</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>                        before <span class="op">=</span> <span class="va">times_post</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
+<span>                        bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                        aggregation <span class="op">=</span> <span class="st">"max"</span>,</span>
+<span>                        resampling <span class="op">=</span> <span class="st">"cubic"</span>,</span>
+<span>                        chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,</span>
+<span>                        outdir <span class="op">=</span> <span class="va">rundir</span>,</span>
+<span>                        label <span class="op">=</span> <span class="st">"post_"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A data cube view object</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dimensions:</span></span>
+<span><span class="co">#&gt;                low             high count pixel_size</span></span>
+<span><span class="co">#&gt; t       2017-06-26       2017-08-06     3       P14D</span></span>
+<span><span class="co">#&gt; y  1055984.8569279  1066984.8569279    55        200</span></span>
+<span><span class="co">#&gt; x 348138.569534966 362538.569534966    72        200</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SRS: "EPSG:32638"</span></span>
+<span><span class="co">#&gt; Temporal aggregation method: "max"</span></span>
+<span><span class="co">#&gt; Spatial resampling method: "cubic"</span></span></code></pre></div>
+<p>Let’s visualize the trend results for both the pre- and post
+intervention period. Note that the first layer returned by the default
+trend function is the slope of the linear trend while the second layer
+defaults to the p-value.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pre</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"pre_2017-05-01.tif"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/terra/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pre</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRE:slope"</span>, <span class="st">"PRE:p.value"</span><span class="op">)</span>
-
-<span class="va">post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"post_2017-06-26.tif"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/terra/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POST:slope"</span>, <span class="st">"POST:p.value"</span><span class="op">)</span>
-
-
-<span class="va">comp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pre</span>,<span class="va">post</span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pre</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"pre_2017-05-01.tif"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pre</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRE:slope"</span>, <span class="st">"PRE:p.value"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rundir</span>, <span class="st">"post_2017-06-26.tif"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POST:slope"</span>, <span class="st">"POST:p.value"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">comp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pre</span>,<span class="va">post</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></code></pre></div>
 <p><img src="trends_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>Having calculated the NDVI slope for both time periods, we now might be interested in learning the differences between these two. The <code>{mapme.vegetation}</code> package comes with a function called <code><a href="../reference/compare_epochs.html">compare_epochs()</a></code> for just that. It allows the pixel-wise comparison between two rasters. Multiple layers are understood as a time dimension and a suitable temporal aggregation method can be chosen before the comparison is conducted. User’s are expected to specify one simple comparison operator (e.g. + / - / : / * ) and the order of the comparision (which epoch comes first). In our example, let’s calculate the fraction of the slope we observe during the post period in relation to the pre period. Values below one will indicate pixels which show a smaller slope in the post intervention period, while pixels with values greater one will indicate areas with greater slopes compared to the pre-intervention period. The function excepts either character strings pointing to raster files or spatRaster objects.</p>
+<p>Having calculated the NDVI slope for both time periods, we now might
+be interested in learning the differences between these two. The
+<code>{mapme.vegetation}</code> package comes with a function called
+<code><a href="../reference/compare_epochs.html">compare_epochs()</a></code> for just that. It allows the pixel-wise
+comparison between two rasters. Multiple layers are understood as a time
+dimension and a suitable temporal aggregation method can be chosen
+before the comparison is conducted. User’s are expected to specify one
+simple comparison operator (e.g. + / - / : / * ) and the order of the
+comparision (which epoch comes first). In our example, let’s calculate
+the fraction of the slope we observe during the post period in relation
+to the pre period. Values below one will indicate pixels which show a
+smaller slope in the post intervention period, while pixels with values
+greater one will indicate areas with greater slopes compared to the
+pre-intervention period. The function excepts either character strings
+pointing to raster files or spatRaster objects.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">ep_comp</span> <span class="op">=</span> <span class="fu"><a href="../reference/compare_epochs.html">compare_epochs</a></span><span class="op">(</span>epoch1_files <span class="op">=</span> <span class="va">pre</span><span class="op">$</span><span class="va">`PRE:slope`</span> , 
-                          epoch2_files <span class="op">=</span> <span class="va">post</span><span class="op">$</span><span class="va">`POST:slope`</span>, 
-                          order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, 
-                          stat <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; class       : SpatRaster </span>
-<span class="co">#&gt; dimensions  : 55, 72, 1  (nrow, ncol, nlyr)</span>
-<span class="co">#&gt; resolution  : 200, 200  (x, y)</span>
-<span class="co">#&gt; extent      : 348138.6, 362538.6, 1055985, 1066985  (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; coord. ref. : WGS 84 / UTM zone 38N (EPSG:32638) </span>
-<span class="co">#&gt; source      : memory </span>
-<span class="co">#&gt; name        : POST:slope </span>
-<span class="co">#&gt; min value   :  -165.7377 </span>
-<span class="co">#&gt; max value   :   797.6311</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ep_comp</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ep_comp</span> <span class="op">=</span> <span class="fu"><a href="../reference/compare_epochs.html">compare_epochs</a></span><span class="op">(</span>epoch1_files <span class="op">=</span> <span class="va">pre</span><span class="op">$</span><span class="va">`PRE:slope`</span> , </span>
+<span>                          epoch2_files <span class="op">=</span> <span class="va">post</span><span class="op">$</span><span class="va">`POST:slope`</span>, </span>
+<span>                          order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, </span>
+<span>                          stat <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; class       : SpatRaster </span></span>
+<span><span class="co">#&gt; dimensions  : 55, 72, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; resolution  : 200, 200  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : 348138.6, 362538.6, 1055985, 1066985  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; coord. ref. : WGS 84 / UTM zone 38N (EPSG:32638) </span></span>
+<span><span class="co">#&gt; source(s)   : memory</span></span>
+<span><span class="co">#&gt; name        : POST:slope </span></span>
+<span><span class="co">#&gt; min value   :  -165.7377 </span></span>
+<span><span class="co">#&gt; max value   :   797.6311</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ep_comp</span><span class="op">)</span></span></code></pre></div>
 <p><img src="trends_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>We do not see much but why? Let’s inspect the value range.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/terra/man/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/values.html" class="external-link">values</a></span><span class="op">(</span><span class="va">ep_comp</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/boxplot.html" class="external-link">boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/values.html" class="external-link">values</a></span><span class="op">(</span><span class="va">ep_comp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="trends_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>That is interesting! There is a single pixels that shows a difference in NDVI between the pre- and post-intervention period of up to 80,000% (note that you have to multiply with 100 to get percent). Because of that very large value range we don’t see much when we plot the data. Anyway, a difference that large is highly implausible. The main reason is that our comparison between pre- and post-intervention does not make any sense. The split into the two different periods as well as the trend calculation based only on 3 or 4 data points is not very sensual. However, we showcased the functionality of the <code>{mapme.vegetation}</code> package to calculate and compare trends between different epochs as these can be used in real world analysis of project evaluations.</p>
+<p>That is interesting! There is a single pixels that shows a difference
+in NDVI between the pre- and post-intervention period of up to 80,000%
+(note that you have to multiply with 100 to get percent). Because of
+that very large value range we don’t see much when we plot the data.
+Anyway, a difference that large is highly implausible. The main reason
+is that our comparison between pre- and post-intervention does not make
+any sense. The split into the two different periods as well as the trend
+calculation based only on 3 or 4 data points is not very sensual.
+However, we showcased the functionality of the
+<code>{mapme.vegetation}</code> package to calculate and compare trends
+between different epochs as these can be used in real world analysis of
+project evaluations.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -242,7 +298,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

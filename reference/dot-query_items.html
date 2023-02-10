@@ -18,7 +18,7 @@ matching a spatiotemporal extent."><meta property="og:image" content="/logo.png"
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -80,39 +80,54 @@ matching a spatiotemporal extent.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">.query_items</span><span class="op">(</span><span class="va">s</span>, <span class="va">collection</span>, <span class="va">bbox</span>, <span class="va">datetime</span>, <span class="va">max.items</span>, <span class="va">verbose</span>, <span class="va">max.cloud</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.query_items</span><span class="op">(</span><span class="va">s</span>, <span class="va">collection</span>, <span class="va">bbox</span>, <span class="va">datetime</span>, <span class="va">max.items</span>, <span class="va">verbose</span>, <span class="va">max.cloud</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>s</dt>
 <dd><p>A STACconnection object from the <code>rstac</code> package.</p></dd>
+
+
 <dt>collection</dt>
 <dd><p>A length one character vector indicating the name of the
 collection to query for items.</p></dd>
+
+
 <dt>bbox</dt>
 <dd><p>A numeric vector of length four indicating the spatial bounding
 box of the query <code>(xmin, ymin, xmax, ymax)</code> in geographic coordinates. Defaults
 to `NULL` which will set the spatial extent to global, i.e. <code>c(-180, -90, 180, 90)</code>.</p></dd>
+
+
 <dt>datetime</dt>
 <dd><p>A length one character vector indicating the start and endpoint
 of the temporal query.</p></dd>
+
+
 <dt>max.items</dt>
 <dd><p>A length one integer indicating the maximum number of items
 to return from a single query. Defaults to 500. Can be used for cases where
 large queries will lead to long query times. But if that is the case it is
 advisable to break up into small sub-queries so that the complete data can
 be downloaded.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A  logical indicating the verbosity.</p></dd>
+
+
 <dt>max.cloud</dt>
 <dd><p>A length one integer indicating the maximum number of cloud
 cover in percent to qualify a scene for download. Defaults to <code>100</code> which will
 download all scenes matching the spatiotemporal extent.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A items list object of <code>rstac</code>.</p>
+    
+
+<p>A items list object of <code>rstac</code>.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -135,7 +150,7 @@ download all scenes matching the spatiotemporal extent.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

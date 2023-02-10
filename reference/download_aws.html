@@ -21,7 +21,7 @@ COGs can be downloaded using this function."><meta property="og:image" content="
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -86,26 +86,26 @@ COGs can be downloaded using this function.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">download_aws</span><span class="op">(</span>
-  collection <span class="op">=</span> <span class="st">"sentinel-s2-l2a-cogs"</span>,
-  assets <span class="op">=</span> <span class="cn">NULL</span>,
-  bbox <span class="op">=</span> <span class="cn">NULL</span>,
-  after <span class="op">=</span> <span class="cn">NULL</span>,
-  before <span class="op">=</span> <span class="cn">NULL</span>,
-  timeframe <span class="op">=</span> <span class="st">"full"</span>,
-  max.cloud <span class="op">=</span> <span class="fl">100</span>,
-  max.items <span class="op">=</span> <span class="fl">500</span>,
-  outdir <span class="op">=</span> <span class="st">"."</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  use_aria <span class="op">=</span> <span class="cn">F</span>,
-  aria_bin <span class="op">=</span> <span class="cn">NULL</span>,
-  skip_existing <span class="op">=</span> <span class="cn">FALSE</span>,
-  max_concurrent <span class="op">=</span> <span class="fl">4</span>,
-  max_connections <span class="op">=</span> <span class="fl">4</span>,
-  retry <span class="op">=</span> <span class="fl">2</span>,
-  verbose <span class="op">=</span> <span class="cn">T</span>,
-  query_only <span class="op">=</span> <span class="cn">F</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_aws</span><span class="op">(</span></span>
+<span>  collection <span class="op">=</span> <span class="st">"sentinel-s2-l2a-cogs"</span>,</span>
+<span>  assets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bbox <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  after <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  before <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  timeframe <span class="op">=</span> <span class="st">"full"</span>,</span>
+<span>  max.cloud <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  max.items <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  outdir <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  use_aria <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  aria_bin <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  skip_existing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_concurrent <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  max_connections <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  retry <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  query_only <span class="op">=</span> <span class="cn">F</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,70 +113,107 @@ COGs can be downloaded using this function.</p>
     <dl><dt>collection</dt>
 <dd><p>A name of a collection. Defaults to <code>"sentinel-s2-l2a-cogs"</code>,
 currently the only supported collection.</p></dd>
+
+
 <dt>assets</dt>
 <dd><p>A character vector indicating the assets to download, e.g. bands.
 Defaults to <code>NULL</code> which will download all available assets.</p></dd>
+
+
 <dt>bbox</dt>
 <dd><p>A numeric vector of lenght four indicating the spatial bounding
 box of the query <code>c(xmin, ymin, xmax, ymax)</code> in geographic coordinates. Defaults
 to <code>NULL</code> which will set the spatial extent to global, i.e. <code>c(-180, -90, 180, 90)</code>.</p></dd>
+
+
 <dt>after</dt>
 <dd><p>A length one character vector in the form `<!-- %Y-%m-%d` specifying -->
 the earliest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>before</dt>
 <dd><p>A length one character vector in the form `<!-- %Y-%m-%d` specifying -->
 the latest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>timeframe</dt>
 <dd><p>A length one character vector indicating whether the query
 should return the complete time series between <code>after</code> and <code>before</code> or
 if the query should be based on seasons. Possbile values are <code>"full"</code> and <code>"seasonal"</code>.
 Defaults to <code>"full"</code>.</p></dd>
+
+
 <dt>max.cloud</dt>
 <dd><p>A length one integer indicating the maximum number of cloud
 cover in percent to qualify a scene for download. Defaults to <code>"100"</code> which will
 download all scenes matching the spatiotemporal extent.</p></dd>
+
+
 <dt>max.items</dt>
 <dd><p>A length one integer indicating the maximum number of items
 to return from a single query. Defaults to 500. Can be used for cases where
 large queries will lead to long query times. But if that is the case it is
 advisable to break up into small sub-queries so that the complete data can
 be downloaded.</p></dd>
+
+
 <dt>outdir</dt>
 <dd><p>A character vector of an existing directory. Defaults to the
 current working directory. Throws an error if the directory does not exist.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>A logical indicator indicating if present data sets in <code>outdir</code>
 should be overwritten. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>use_aria</dt>
 <dd><p>A logical if the aria2 downloader shall be used. Defaultes to
 FALSE which will download the items sequentially via GET requests. If TRUE
 it is expected that the argument <code>aria_bin</code> points towards a valid
 aria binary installation.</p></dd>
+
+
 <dt>aria_bin</dt>
 <dd><p>A charachter vector pointing to a valid aria binary.</p></dd>
+
+
 <dt>skip_existing</dt>
 <dd><p>A logical indicating if existing files should be removed from
 the download list prior to downloading with aria. Might speed up the process
 when a prior download was interrupted, however, when files were not downloaded
 completley their download is not ressumed (check for .aria files in outdir).
 Defaults to FALSE which means that existing files are not skipped.</p></dd>
+
+
 <dt>max_concurrent</dt>
 <dd><p>Maximum number of connections to the server to load
 a single file. Defaults to <code>4</code>.</p></dd>
+
+
 <dt>max_connections</dt>
 <dd><p>Maximum number of parallel connections to the server
 to load files simoltaniously. Defaults to 4.</p></dd>
+
+
 <dt>retry</dt>
 <dd><p>Integer. Maximum integer of retries for erroneous downloads.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical indicating the verbosity.</p></dd>
+
+
 <dt>query_only</dt>
 <dd><p>Logical. Defaults to FALSE which means matching items are downloaded.
 Else matching items are returned in a list object.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Nothing. This function downloads matching assets of the spatiotemporal
+    
+
+<p>Nothing. This function downloads matching assets of the spatiotemporal
   query to the specified directory in <code>outdir</code>.</p>
     </div>
     <div id="author">
@@ -200,7 +237,7 @@ Else matching items are returned in a list object.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,14 +96,15 @@
 
       
 
-      </header><script src="workflow_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="workflow_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="workflow_files/d3-3.3.8/d3.min.js"></script><script src="workflow_files/dagre-0.4.0/dagre-d3.min.js"></script><link href="workflow_files/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
+      </header><script src="workflow_files/htmlwidgets-1.6.1/htmlwidgets.js"></script><script src="workflow_files/d3-3.3.8/d3.min.js"></script><script src="workflow_files/dagre-0.4.0/dagre-d3.min.js"></script><link href="workflow_files/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
 <script src="workflow_files/mermaid-0.3.0/dist/mermaid.slim.min.js"></script><link href="workflow_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="workflow_files/chromatography-0.1/chromatography.js"></script><script src="workflow_files/DiagrammeR-binding-1.0.9/DiagrammeR.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Workflow</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>workflow.Rmd</code></div>
@@ -112,19 +113,34 @@
 
     
     
-<p>In the following, the most important steps of the processing workflow of <code>{mapme.vegetation}</code> are described; the figure guides the reader through these descriptions. The overall goal here is to download the matching Sentinel-2 tiles a spatio-temporal extent of interest and process the downloaded data to derive a dense time series of surface reflectance bands and vegetation indices. On the other end of this process, there are optional additional analysis steps such as the calculation of pixel-wise trends or the extraction of zonal statistics.</p>
+<p>In the following, the most important steps of the processing workflow
+of <code>{mapme.vegetation}</code> are described; the figure guides the
+reader through these descriptions. The overall goal here is to download
+the matching Sentinel-2 tiles a spatio-temporal extent of interest and
+process the downloaded data to derive a dense time series of surface
+reflectance bands and vegetation indices. On the other end of this
+process, there are optional additional analysis steps such as the
+calculation of pixel-wise trends or the extraction of zonal
+statistics.</p>
 <ul>
-<li>download only relevant bands for a given spatio-temporal extent of Sentinel-2 L2A data</li>
-<li>prepare a custom cloud mask based on the sen2cor Scene Cover Classification (SCL)</li>
-<li>calculate indices and extract surface reflectance bands and aggregate values to a regular sparse timeseries</li>
-<li>apply an interpolation and smoothing strategy to fill in missing data, reduce noise, and create a dense timeseires</li>
-<li>optionally, calculate pixel-wise trends through the time dimension</li>
-<li>optionally, extract zonal statistics of areas of interest, e.g. for diff-in-diff analysis</li>
-<li>optionally, extract pixel time-series, e.g. for later usage with the <code>{<a href="https://mapme-initiative.github.io/mapme.classification/" class="external-link">mapme.classification</a>}</code>
+<li>download only relevant bands for a given spatio-temporal extent of
+Sentinel-2 L2A data</li>
+<li>prepare a custom cloud mask based on the sen2cor Scene Cover
+Classification (SCL)</li>
+<li>calculate indices and extract surface reflectance bands and
+aggregate values to a regular sparse timeseries</li>
+<li>apply an interpolation and smoothing strategy to fill in missing
+data, reduce noise, and create a dense timeseires</li>
+<li>optionally, calculate pixel-wise trends through the time
+dimension</li>
+<li>optionally, extract zonal statistics of areas of interest, e.g. for
+diff-in-diff analysis</li>
+<li>optionally, extract pixel time-series, e.g. for later usage with the
+<code>{<a href="https://mapme-initiative.github.io/mapme.classification/" class="external-link">mapme.classification</a>}</code>
 </li>
 </ul>
-<div id="htmlwidget-1544c056a2dc1055d638" style="width:480px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1544c056a2dc1055d638">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download)\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script>
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7f1bb32325239f226854" style="width:480px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-7f1bb32325239f226854">{"x":{"diagram":"\n  graph TB\n\n    classDef default fill:#c2dddd,stroke-width:2px,stroke:#034858;\n \n    A(Query & Download)\n    B(Apply Cloud Mask)\n    C(Calculate VIs and SR)\n    D(Dense Time Series)\n    E(Trends)\n    F(Zonal Statistics)\n    G(Pixel Extraction)\n    A-->B\n    B-->C\n    C-->D\n    D-->E\n    D-->F\n    D-->G\n\n"},"evals":[],"jsHooks":[]}</script>
 </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -142,7 +158,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

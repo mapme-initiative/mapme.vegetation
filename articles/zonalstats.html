@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="zonalstats_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Extract Zonal Statistics</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>zonalstats.Rmd</code></div>
@@ -111,72 +112,102 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></code></pre></div>
-<p>This vignette showcases different ways to extract zonal and pixelwise statistics from a time series processed with the <code>mapme.vegetation</code> package. We assume that we have processed S2 data to a dense time-series following vignette xx. Let’s read in the files and our AOI.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span></code></pre></div>
+<p>This vignette showcases different ways to extract zonal and pixelwise
+statistics from a time series processed with the
+<code>mapme.vegetation</code> package. We assume that we have processed
+S2 data to a dense time-series following vignette xx. Let’s read in the
+files and our AOI.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ndvi_files</span> <span class="op">=</span> <span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/filled"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">bands</span> <span class="op">=</span> <span class="st">"NDVI"</span>
-<span class="va">times</span> <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">ndvi_files</span><span class="op">)</span>, <span class="op">-</span><span class="fl">14</span>, <span class="op">-</span><span class="fl">5</span><span class="op">)</span>
-
-<span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span>
-<span class="va">aoi_utm</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span>
-<span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span></code></pre></div>
-<p>As an example we will extract zonal statistics for the complete AOI. This function relies on <code>gdalcubes</code> which is why we need information of the spatio-temporal extent of the input files. These are the same as in the other vignettes. With this function we get information averaged over all pixels within a polygon for each time step. This information is useful for statistical analysis and might also be suitable for object based classification or regression problems which require information through the time axis. Specific metrics can be calculated. Thanks to the gdalcubes package, any R function that summarizes the data per zone can be supplied to a named list. It is important to declare a column as the primary identification column with the argument <code>idcol</code>. Note that the returned object will be in a time-long format. That also means that the geometry column will be repeated. Because of this, the resulting object might be quite large. You can specify a filepath with the <code>outpath</code> argument to write the object to a GeoPackage (.gpkg).</p>
+<code class="sourceCode R"><span><span class="va">ndvi_files</span> <span class="op">=</span> <span class="va">s2_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/filled"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, <span class="st">".tif"</span>, full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">bands</span> <span class="op">=</span> <span class="st">"NDVI"</span></span>
+<span><span class="va">times</span> <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">ndvi_files</span><span class="op">)</span>, <span class="op">-</span><span class="fl">14</span>, <span class="op">-</span><span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">aoi_utm</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32638</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aoi_utm</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi_utm</span><span class="op">)</span></span></code></pre></div>
+<p>As an example we will extract zonal statistics for the complete AOI.
+This function relies on <code>gdalcubes</code> which is why we need
+information of the spatio-temporal extent of the input files. These are
+the same as in the other vignettes. With this function we get
+information averaged over all pixels within a polygon for each time
+step. This information is useful for statistical analysis and might also
+be suitable for object based classification or regression problems which
+require information through the time axis. Specific metrics can be
+calculated. Thanks to the gdalcubes package, any R function that
+summarizes the data per zone can be supplied to a named list. It is
+important to declare a column as the primary identification column with
+the argument <code>idcol</code>. Note that the returned object will be
+in a time-long format. That also means that the geometry column will be
+repeated. Because of this, the resulting object might be quite large.
+You can specify a filepath with the <code>outpath</code> argument to
+write the object to a GeoPackage (.gpkg).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">zs_aoi</span> <span class="op">=</span> <span class="fu"><a href="../reference/extract_zonalstats.html">extract_zonalstats</a></span><span class="op">(</span>aoi <span class="op">=</span> <span class="va">aoi_utm</span>, 
-                            idcol <span class="op">=</span> <span class="st">"id"</span>, 
-                            files <span class="op">=</span> <span class="va">ndvi_files</span>, 
-                            times <span class="op">=</span> <span class="va">times</span>, 
-                            bands <span class="op">=</span> <span class="va">bands</span>, 
-                            bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                            zonalfuns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span>sum <span class="op">=</span> <span class="va">sum</span>, mean <span class="op">=</span> <span class="va">mean</span>, median <span class="op">=</span> <span class="va">median</span>, ncells <span class="op">=</span> <span class="va">length</span><span class="op">)</span>, 
-                            after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                            before <span class="op">=</span> <span class="st">"2017-07-31"</span>, 
-                            srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>, 
-                            dx <span class="op">=</span> <span class="fl">200</span>, 
-                            dy <span class="op">=</span> <span class="fl">200</span>, 
-                            dt <span class="op">=</span> <span class="st">"P14D"</span>, 
-                            aggregation <span class="op">=</span> <span class="st">"max"</span>, 
-                            resampling <span class="op">=</span> <span class="st">"near"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">zs_aoi</span><span class="op">)</span>
-<span class="co">#&gt; Simple feature collection with 6 features and 4 fields</span>
-<span class="co">#&gt; Geometry type: POLYGON</span>
-<span class="co">#&gt; Dimension:     XY</span>
-<span class="co">#&gt; Bounding box:  xmin: 348194.9 ymin: 1056042 xmax: 362482.2 ymax: 1066928</span>
-<span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 38N</span>
-<span class="co">#&gt;         time     NDVI stat id                           geom</span>
-<span class="co">#&gt; 1 2017-05-01 440.8433  sum  1 POLYGON ((348194.9 1056042,...</span>
-<span class="co">#&gt; 2 2017-05-15 555.8793  sum  1 POLYGON ((348194.9 1056042,...</span>
-<span class="co">#&gt; 3 2017-05-29 570.3013  sum  1 POLYGON ((348194.9 1056042,...</span>
-<span class="co">#&gt; 4 2017-06-12 569.3919  sum  1 POLYGON ((348194.9 1056042,...</span>
-<span class="co">#&gt; 5 2017-06-26 578.9204  sum  1 POLYGON ((348194.9 1056042,...</span>
-<span class="co">#&gt; 6 2017-07-10 600.0071  sum  1 POLYGON ((348194.9 1056042,...</span></code></pre></div>
-<p>On other occasions pixel-wise information for polygons might be of interest, e.g. when the goal of your analysis is the pixel-wise classification of a landscape. For this kind of extraction we rely on the <a href="https://rspatial.org/terra/" class="external-link">terra</a> package. For the resulting data.frame object to receive the right column names, however, it is important to hand over the band names and the associated time-stamp for each file.</p>
+<code class="sourceCode R"><span><span class="va">zs_aoi</span> <span class="op">=</span> <span class="fu"><a href="../reference/extract_zonalstats.html">extract_zonalstats</a></span><span class="op">(</span>aoi <span class="op">=</span> <span class="va">aoi_utm</span>, </span>
+<span>                            idcol <span class="op">=</span> <span class="st">"id"</span>, </span>
+<span>                            files <span class="op">=</span> <span class="va">ndvi_files</span>, </span>
+<span>                            times <span class="op">=</span> <span class="va">times</span>, </span>
+<span>                            bands <span class="op">=</span> <span class="va">bands</span>, </span>
+<span>                            bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                            zonalfuns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>sum <span class="op">=</span> <span class="va">sum</span>, mean <span class="op">=</span> <span class="va">mean</span>, median <span class="op">=</span> <span class="va">median</span>, ncells <span class="op">=</span> <span class="va">length</span><span class="op">)</span>, </span>
+<span>                            after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                            before <span class="op">=</span> <span class="st">"2017-07-31"</span>, </span>
+<span>                            srs <span class="op">=</span> <span class="st">"EPSG:32638"</span>, </span>
+<span>                            dx <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>                            dy <span class="op">=</span> <span class="fl">200</span>, </span>
+<span>                            dt <span class="op">=</span> <span class="st">"P14D"</span>, </span>
+<span>                            aggregation <span class="op">=</span> <span class="st">"max"</span>, </span>
+<span>                            resampling <span class="op">=</span> <span class="st">"near"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">zs_aoi</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Simple feature collection with 6 features and 4 fields</span></span>
+<span><span class="co">#&gt; Geometry type: POLYGON</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 348194.9 ymin: 1056042 xmax: 362482.2 ymax: 1066928</span></span>
+<span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 38N</span></span>
+<span><span class="co">#&gt;         time     NDVI stat id                           geom</span></span>
+<span><span class="co">#&gt; 1 2017-05-01 440.8433  sum  1 POLYGON ((348194.9 1056042,...</span></span>
+<span><span class="co">#&gt; 2 2017-05-15 555.8793  sum  1 POLYGON ((348194.9 1056042,...</span></span>
+<span><span class="co">#&gt; 3 2017-05-29 570.3013  sum  1 POLYGON ((348194.9 1056042,...</span></span>
+<span><span class="co">#&gt; 4 2017-06-12 569.3919  sum  1 POLYGON ((348194.9 1056042,...</span></span>
+<span><span class="co">#&gt; 5 2017-06-26 578.9204  sum  1 POLYGON ((348194.9 1056042,...</span></span>
+<span><span class="co">#&gt; 6 2017-07-10 600.0071  sum  1 POLYGON ((348194.9 1056042,...</span></span></code></pre></div>
+<p>On other occasions pixel-wise information for polygons might be of
+interest, e.g. when the goal of your analysis is the pixel-wise
+classification of a landscape. For this kind of extraction we rely on
+the <a href="https://rspatial.org/terra/" class="external-link">terra</a> package. For the resulting data.frame object to
+receive the right column names, however, it is important to hand over
+the band names and the associated time-stamp for each file.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ps_aoi</span> <span class="op">=</span> <span class="fu"><a href="../reference/extract_pixels.html">extract_pixels</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">ndvi_files</span>,
-                        bands <span class="op">=</span> <span class="va">bands</span>,
-                        times <span class="op">=</span> <span class="va">times</span>, 
-                        aoi <span class="op">=</span> <span class="va">aoi_utm</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps_aoi</span><span class="op">)</span>
-<span class="co">#&gt;   ID NDVI-2017-05-01 NDVI-2017-05-15 NDVI-2017-05-29 NDVI-2017-06-12</span>
-<span class="co">#&gt; 1  1      0.10098172       0.1437648       0.1508505       0.1471979</span>
-<span class="co">#&gt; 2  1      0.09259786       0.1310685       0.1391816       0.1403345</span>
-<span class="co">#&gt; 3  1      0.08804486       0.1242767       0.1325152       0.1372536</span>
-<span class="co">#&gt; 4  1      0.08691528       0.1218589       0.1303333       0.1359665</span>
-<span class="co">#&gt; 5  1      0.08776132       0.1230615       0.1315388       0.1365081</span>
-<span class="co">#&gt; 6  1      0.09056787       0.1301583       0.1377396       0.1404345</span>
-<span class="co">#&gt;   NDVI-2017-06-26 NDVI-2017-07-10 NDVI-2017-07-24 id</span>
-<span class="co">#&gt; 1       0.1449453       0.1495825       0.1599105  1</span>
-<span class="co">#&gt; 2       0.1381166       0.1425987       0.1544822  1</span>
-<span class="co">#&gt; 3       0.1353973       0.1394072       0.1510371  1</span>
-<span class="co">#&gt; 4       0.1338123       0.1368362       0.1471831  1</span>
-<span class="co">#&gt; 5       0.1342536       0.1372983       0.1475986  1</span>
-<span class="co">#&gt; 6       0.1394512       0.1461845       0.1615133  1</span></code></pre></div>
-<p>The resulting object is <strong>not</strong> an sf object. The spatially explicit information is list. However, the column <code>ID</code> indicates to to which feature in the <code>aoi</code> object the pixel information belongs in the order of rows of the input object. The data.frame object has a wide format. Each row represents a single pixel. The columns identify the band name as well as the time-stamp.</p>
+<code class="sourceCode R"><span><span class="va">ps_aoi</span> <span class="op">=</span> <span class="fu"><a href="../reference/extract_pixels.html">extract_pixels</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">ndvi_files</span>,</span>
+<span>                        bands <span class="op">=</span> <span class="va">bands</span>,</span>
+<span>                        times <span class="op">=</span> <span class="va">times</span>, </span>
+<span>                        aoi <span class="op">=</span> <span class="va">aoi_utm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ps_aoi</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   ID NDVI-2017-05-01 NDVI-2017-05-15 NDVI-2017-05-29 NDVI-2017-06-12</span></span>
+<span><span class="co">#&gt; 1  1      0.10098172       0.1437648       0.1508505       0.1471979</span></span>
+<span><span class="co">#&gt; 2  1      0.09259786       0.1310685       0.1391816       0.1403345</span></span>
+<span><span class="co">#&gt; 3  1      0.08804486       0.1242767       0.1325152       0.1372536</span></span>
+<span><span class="co">#&gt; 4  1      0.08691528       0.1218589       0.1303333       0.1359665</span></span>
+<span><span class="co">#&gt; 5  1      0.08776132       0.1230615       0.1315388       0.1365081</span></span>
+<span><span class="co">#&gt; 6  1      0.09056787       0.1301583       0.1377396       0.1404345</span></span>
+<span><span class="co">#&gt;   NDVI-2017-06-26 NDVI-2017-07-10 NDVI-2017-07-24 id</span></span>
+<span><span class="co">#&gt; 1       0.1449453       0.1495825       0.1599105  1</span></span>
+<span><span class="co">#&gt; 2       0.1381166       0.1425987       0.1544822  1</span></span>
+<span><span class="co">#&gt; 3       0.1353973       0.1394072       0.1510371  1</span></span>
+<span><span class="co">#&gt; 4       0.1338123       0.1368362       0.1471831  1</span></span>
+<span><span class="co">#&gt; 5       0.1342536       0.1372983       0.1475986  1</span></span>
+<span><span class="co">#&gt; 6       0.1394512       0.1461845       0.1615133  1</span></span></code></pre></div>
+<p>The resulting object is <strong>not</strong> an sf object. The
+spatially explicit information is list. However, the column
+<code>ID</code> indicates to to which feature in the <code>aoi</code>
+object the pixel information belongs in the order of rows of the input
+object. The data.frame object has a wide format. Each row represents a
+single pixel. The columns identify the band name as well as the
+time-stamp.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -194,7 +225,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

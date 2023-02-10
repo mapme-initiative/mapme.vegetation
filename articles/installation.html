@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="installation_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Installation</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>installation.Rmd</code></div>
@@ -110,14 +111,33 @@
 
     
     
-<p>This sections describes how to install the <code>{mapme.vegetation}</code> package. Because the package handles some spatial data, we assume that you have a working installation of <a href="https://gdal.org/index.html" class="external-link">GDAL</a> and <a href="https://proj.org/" class="external-link">PROJ</a> on your system. Please refer to the respective installation guides to learn about how to install these programs on your OS. Additionally, the cloud masking routine works by using the <a href="https://grass.osgeo.org/" class="external-link">GRASS GIS</a> software. Be referred to the indicated websites to learn how to install this programm. While the package supports sequentially downloading Sentinel-2 images from AWS, this could take a long time when there are many assets to download. To speed up this process by parallel downloading several files we support the <a href="https://aria2.github.io/" class="external-link">aria2</a> downloader. We expect that the path to the executable binaries to both a working GRASS GIS installation and the aria2 downloader is known to the user and specified to the respective function calls.</p>
-<p>Windows users additionally will have to install the <a href="https://cran.r-project.org/bin/windows/Rtools" class="external-link">rtools</a> software for a successful installation of the <code>{mapme.vegetation}</code> package from source.</p>
-<p>Installing the <code>{mapme.vegetation}</code> package is then achieved trough the following function call:</p>
+<p>This sections describes how to install the
+<code>{mapme.vegetation}</code> package. Because the package handles
+some spatial data, we assume that you have a working installation of <a href="https://gdal.org/index.html" class="external-link">GDAL</a> and <a href="https://proj.org/" class="external-link">PROJ</a> on your system. Please refer to the
+respective installation guides to learn about how to install these
+programs on your OS. Additionally, the cloud masking routine works by
+using the <a href="https://grass.osgeo.org/" class="external-link">GRASS GIS</a> software. Be
+referred to the indicated websites to learn how to install this
+programm. While the package supports sequentially downloading Sentinel-2
+images from AWS, this could take a long time when there are many assets
+to download. To speed up this process by parallel downloading several
+files we support the <a href="https://aria2.github.io/" class="external-link">aria2</a>
+downloader. We expect that the path to the executable binaries to both a
+working GRASS GIS installation and the aria2 downloader is known to the
+user and specified to the respective function calls.</p>
+<p>Windows users additionally will have to install the <a href="https://cran.r-project.org/bin/windows/Rtools" class="external-link">rtools</a> software
+for a successful installation of the <code>{mapme.vegetation}</code>
+package from source.</p>
+<p>Installing the <code>{mapme.vegetation}</code> package is then
+achieved trough the following function call:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mapme-initiative/mapme.vegetation"</span><span class="op">)</span></code></pre></div>
-<p>The installation process will install potential missing R dependencies. After the successful installation, you are ready to use the package’s functionality. Simply load the package for your R session with the library call:</p>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mapme-initiative/mapme.vegetation"</span><span class="op">)</span></span></code></pre></div>
+<p>The installation process will install potential missing R
+dependencies. After the successful installation, you are ready to use
+the package’s functionality. Simply load the package for your R session
+with the library call:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -135,7 +155,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -24,7 +24,7 @@ the noise in the signal."><meta property="og:image" content="/logo.png"><!-- mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -92,30 +92,30 @@ the noise in the signal.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">smooth_cube</span><span class="op">(</span>
-  files <span class="op">=</span> <span class="cn">NULL</span>,
-  bands <span class="op">=</span> <span class="cn">NULL</span>,
-  times <span class="op">=</span> <span class="cn">NULL</span>,
-  dx <span class="op">=</span> <span class="cn">NULL</span>,
-  dy <span class="op">=</span> <span class="cn">NULL</span>,
-  dt <span class="op">=</span> <span class="cn">NULL</span>,
-  srs <span class="op">=</span> <span class="cn">NULL</span>,
-  after <span class="op">=</span> <span class="cn">NULL</span>,
-  before <span class="op">=</span> <span class="cn">NULL</span>,
-  timeframe <span class="op">=</span> <span class="st">"full"</span>,
-  bbox <span class="op">=</span> <span class="cn">NULL</span>,
-  aggregation <span class="op">=</span> <span class="st">"mean"</span>,
-  resampling <span class="op">=</span> <span class="st">"bilinear"</span>,
-  smoothing_function <span class="op">=</span> <span class="cn">NULL</span>,
-  chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,
-  threads <span class="op">=</span> <span class="fl">1</span>,
-  outdir <span class="op">=</span> <span class="st">"."</span>,
-  overwrite <span class="op">=</span> <span class="cn">F</span>,
-  label <span class="op">=</span> <span class="st">""</span>,
-  n <span class="op">=</span> <span class="fl">100</span>,
-  verbose <span class="op">=</span> <span class="cn">T</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">smooth_cube</span><span class="op">(</span></span>
+<span>  files <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bands <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  times <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dx <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dy <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dt <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  srs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  after <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  before <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  timeframe <span class="op">=</span> <span class="st">"full"</span>,</span>
+<span>  bbox <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  aggregation <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  resampling <span class="op">=</span> <span class="st">"bilinear"</span>,</span>
+<span>  smoothing_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chunking <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">256</span>, <span class="fl">256</span><span class="op">)</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  outdir <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  label <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -123,51 +123,77 @@ the noise in the signal.</p>
     <dl><dt>files</dt>
 <dd><p>A character vector with the filepaths to the raster files for which
 gap-filling and a smoothing function shall be applied.</p></dd>
+
+
 <dt>bands</dt>
 <dd><p>A character vector indicating the names of the bands in each
 of the raster files specified in the <code>files</code> argument.
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/create_image_collection.html" class="external-link">create_image_collection</a></code>)</p></dd>
+
+
 <dt>times</dt>
 <dd><p>A character vector indicating the date of each raster file specified
 in the <code>files</code> argument in the form of "<!-- %Y%m%d". -->
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/create_image_collection.html" class="external-link">create_image_collection</a></code>)</p></dd>
+
+
 <dt>dx</dt>
 <dd><p>The spatial resolution of the outcome raster files in the <code>x</code> dimension
 in the units of the coordinate reference system specified witht the <code>srs</code> argument.
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>dy</dt>
 <dd><p>The spatial resolution of the outcome raster files in the <code>y</code> dimension
 in the units of the coordinate reference system specified witht the <code>srs</code> argument.
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>dt</dt>
 <dd><p>The temporal resolution of the outcome raster files.
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>srs</dt>
 <dd><p>Target spatial reference system as a string; can be a proj4 definition,
 WKT, or in the form "EPSG:XXXX" (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>after</dt>
 <dd><p>A length one character vector in the form "<!-- %Y-%m-%d" specifying -->
 the earliest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>before</dt>
 <dd><p>A length one character vector in the form "<!-- %Y-%m-%d" specifying -->
 the latest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>timeframe</dt>
 <dd><p>A character of either <code>"seasonal"</code> or <code>"complete"</code> specifying
 if the calculation should be applied for the complete time series or for
 each year independently. Defaults to <code>"complete"</code>. If <code>"seasonal"</code> is specified
 the <code>years</code> variables cannot be left empty.</p></dd>
+
+
 <dt>bbox</dt>
 <dd><p>A numeric vector of lenght four indicating the spatial bounding
 box of the query (xmin, ymin, xmax, ymax) in geographic coordinates. Defaults
 to `NULL` which will set the spatial extent to global, i.e. <code>c(-180, -90, 180, 90)</code>.</p></dd>
+
+
 <dt>aggregation</dt>
 <dd><p>aggregation method as string, defining how to deal with pixels
 containing data from multiple images, can be "min", "max", "mean", "median", or "first"
 (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>resampling</dt>
 <dd><p>resampling method used in gdalwarp when images are read, can be
 "near", "bilinear", "bicubic" or others as supported by gdalwarp
 (see https://gdal.org/programs/gdalwarp.html and <code><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></code>)</p></dd>
+
+
 <dt>smoothing_function</dt>
 <dd><p>Defaults to NULL which means that a linear
 interpolation coupled with <code><a href="https://rdrr.io/pkg/signal/man/sgolayfilt.html" class="external-link">sgolayfilt</a></code>` at its standard
@@ -177,27 +203,44 @@ NA's. The return vector must be of equal length to the time dimension, must
 return one row for each band in the data cube and must not include any NA's.
 See the example for the standard function which is applied when the <code>smoothing_function</code>
 is omitted.</p></dd>
+
+
 <dt>chunking</dt>
 <dd><p>Vector of length 3 defining the size of data cube chunks in the
 order time, y, x. (see <code><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></code>)</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>Number of threads used to process data cubes
 (see <code>link[gdalcubes]{gdalcubes_options}</code>)</p></dd>
+
+
 <dt>outdir</dt>
 <dd><p>A character vector pointing to an existing directory where
 the output rasters are written to.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>A logical indicating if existing files in outdir should be
 overwritten.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>A character vector which is used as a prefix to the output filenames.</p></dd>
+
+
 <dt>n</dt>
 <dd><p>The ratio of pixels for which a custom <code>smoothing_function</code> is tested
 on randomly selected pixels to test if it is applicable. Defaults to <code>0.01</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical indicating the verbosity.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments to  <code><a href="https://rdrr.io/pkg/gdalcubes/man/write_tif.html" class="external-link">write_tif</a></code></p></dd>
+
 </dl></div>
     <div id="author">
     <h2>Author</h2>
@@ -210,17 +253,17 @@ on randomly selected pixels to test if it is applicable. Defaults to <code>0.01<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">smoothing_function</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
-<span class="r-in"><span class="va">results</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"> <span class="va">y</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span></span>
-<span class="r-in"> <span class="va">lin</span> <span class="op">=</span> <span class="fu">zoo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/na.approx.html" class="external-link">na.approx</a></span><span class="op">(</span><span class="va">y</span>, na.rm <span class="op">=</span> <span class="cn">F</span>, rule <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">svg</span> <span class="op">=</span> <span class="fu">signal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/signal/man/sgolayfilt.html" class="external-link">sgolayfilt</a></span><span class="op">(</span><span class="va">lin</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">svg</span></span>
-<span class="r-in"> <span class="op">}</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">results</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">smoothing_function</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span> <span class="va">y</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span> <span class="va">lin</span> <span class="op">=</span> <span class="fu">zoo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/na.approx.html" class="external-link">na.approx</a></span><span class="op">(</span><span class="va">y</span>, na.rm <span class="op">=</span> <span class="cn">F</span>, rule <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="va">svg</span> <span class="op">=</span> <span class="fu">signal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/signal/man/sgolayfilt.html" class="external-link">sgolayfilt</a></span><span class="op">(</span><span class="va">lin</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="va">svg</span></span></span>
+<span class="r-in"><span> <span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">results</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -235,7 +278,7 @@ on randomly selected pixels to test if it is applicable. Defaults to <code>0.01<
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

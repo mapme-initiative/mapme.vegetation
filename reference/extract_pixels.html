@@ -19,7 +19,7 @@ as a vector indicating the date for each raster."><meta property="og:image" cont
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -82,23 +82,32 @@ as a vector indicating the date for each raster.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">extract_pixels</span><span class="op">(</span>files <span class="op">=</span> <span class="cn">NULL</span>, bands <span class="op">=</span> <span class="cn">NULL</span>, times <span class="op">=</span> <span class="cn">NULL</span>, aoi <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_pixels</span><span class="op">(</span>files <span class="op">=</span> <span class="cn">NULL</span>, bands <span class="op">=</span> <span class="cn">NULL</span>, times <span class="op">=</span> <span class="cn">NULL</span>, aoi <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>files</dt>
 <dd><p>A chachter vector indicating the raster files.</p></dd>
+
+
 <dt>bands</dt>
 <dd><p>A charachter vector indicating the names of bands for each raster files.</p></dd>
+
+
 <dt>times</dt>
 <dd><p>A charachter vector indicating the date for each raster file</p></dd>
+
+
 <dt>aoi</dt>
 <dd><p>An sf object of polygons for which to extract the pixel values</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A dataframe object with the extracted value amended by the metadata
+    
+
+<p>A dataframe object with the extracted value amended by the metadata
   of the aoi object.</p>
     </div>
     <div id="author">
@@ -122,7 +131,7 @@ as a vector indicating the date for each raster.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

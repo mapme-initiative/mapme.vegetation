@@ -18,7 +18,7 @@ a spatiotemporal query."><meta property="og:image" content="/logo.png"><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -80,58 +80,79 @@ a spatiotemporal query.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">.download_assets</span><span class="op">(</span>
-  items <span class="op">=</span> <span class="cn">NULL</span>,
-  assets <span class="op">=</span> <span class="cn">NULL</span>,
-  outdir <span class="op">=</span> <span class="st">"."</span>,
-  use_aria <span class="op">=</span> <span class="cn">FALSE</span>,
-  aria_bin <span class="op">=</span> <span class="cn">NULL</span>,
-  skip_existing <span class="op">=</span> <span class="cn">FALSE</span>,
-  max_concurrent <span class="op">=</span> <span class="fl">4</span>,
-  max_connections <span class="op">=</span> <span class="fl">4</span>,
-  retry <span class="op">=</span> <span class="fl">2</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.download_assets</span><span class="op">(</span></span>
+<span>  items <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  assets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  outdir <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  use_aria <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  aria_bin <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  skip_existing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_concurrent <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  max_connections <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  retry <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>items</dt>
 <dd><p>A list of items returned by `rstac::stac_search()`</p></dd>
+
+
 <dt>assets</dt>
 <dd><p>Default is NULL. A possible charachter vector to specify which
 assets to download. If assets do not match the function returns an error
 and lists the available assets.</p></dd>
+
+
 <dt>outdir</dt>
 <dd><p>A character vector of an existing directory. Defaults to the
 current working directory.</p></dd>
+
+
 <dt>use_aria</dt>
 <dd><p>A logical if the aria2 downloader shall be used. Defaultes to
 FALSE which will download the items sequentially via GET requests. If TRUE
 it is expected that the argument `aria_bin` points towards a valid
 aria binary installation.</p></dd>
+
+
 <dt>aria_bin</dt>
 <dd><p>A charachter vector pointing to a valid aria binary.</p></dd>
+
+
 <dt>skip_existing</dt>
 <dd><p>A logical indicating if existing files should be removed from
 the download list prior to downloading with aria. Might speed up the process
 when a prior download was interrupted, however, when files were not downloaded
 completley their download is not ressumed (check for .aria files in outdir).
 Defaults to FALSE which means that existing files are not skipped.</p></dd>
+
+
 <dt>max_concurrent</dt>
 <dd><p>Maximum number of connections to the server to load
 a single file. Defaults to 4.</p></dd>
+
+
 <dt>max_connections</dt>
 <dd><p>Maximum number of parallel connections to the server
 to load files simoltaniously. Defaults to 4.</p></dd>
+
+
 <dt>retry</dt>
 <dd><p>Integer. Maximum integer of retries for erroneous downloads.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical indicating the verbosity.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Nothing. Downloads specified assets into `outdir`.</p>
+    
+
+<p>Nothing. Downloads specified assets into `outdir`.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -154,7 +175,7 @@ to load files simoltaniously. Defaults to 4.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -18,7 +18,7 @@ cells are set to the value of the first object in mask_values"><meta property="o
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -80,25 +80,36 @@ cells are set to the value of the first object in mask_values</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">.scl</span><span class="op">(</span><span class="va">scl_file</span>, <span class="va">outdir</span>, <span class="va">mask_values</span>, <span class="va">mask_buffer</span>, <span class="va">grass_bin</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.scl</span><span class="op">(</span><span class="va">scl_file</span>, <span class="va">outdir</span>, <span class="va">mask_values</span>, <span class="va">mask_buffer</span>, <span class="va">grass_bin</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>scl_file</dt>
 <dd><p>A chrachter vector indicating the path to the input SCL file</p></dd>
+
+
 <dt>outdir</dt>
 <dd><p>A path to a directory where the output file will be written to.</p></dd>
+
+
 <dt>mask_values</dt>
 <dd><p>A numeric vector indicating which values should be masked</p></dd>
+
+
 <dt>mask_buffer</dt>
 <dd><p>The distance for the buffer in map units (typically in meters).</p></dd>
+
+
 <dt>grass_bin</dt>
 <dd><p>A path to the GRASS GIS binary directory.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Nothing. Writes buffered SCL mask to outdir. All cells within the
+    
+
+<p>Nothing. Writes buffered SCL mask to outdir. All cells within the
   buffer will obtain the value of the first element in mask_values.</p>
     </div>
     <div id="author">
@@ -122,7 +133,7 @@ cells are set to the value of the first object in mask_values</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="download_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Download</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>download.Rmd</code></div>
@@ -110,177 +111,209 @@
 
     
     
-<p>The <code>mapme.vegetation</code> package allows us to easily download and work with Sentinel-2 (S2) Level 2A datasets. These datasets represent bottom of atmosphere (BOA) reflectance values processed with <a href="https://step.esa.int/main/snap-supported-plugins/sen2cor/" class="external-link">sen2cor</a>. The data is made available via the <a href="https://stacindex.org/catalogs/earth-search#/" class="external-link">Earth Search</a> STAC API from AWS. <code>mapme.vegetation</code> can be used to query the server for a given spatio-temporal extent of interest and download matching results. S2 download from AWS is free of cost and does not require a user account. However, users should be aware that there is a maximum of 500 items per query. In case the spatio-temporal extent will lead to more items it is up to the user to split up the query into suitable chunks. The package allows for querying the data without a direct download in order to check the items returned.</p>
+<p>The <code>mapme.vegetation</code> package allows us to easily
+download and work with Sentinel-2 (S2) Level 2A datasets. These datasets
+represent bottom of atmosphere (BOA) reflectance values processed with
+<a href="https://step.esa.int/main/snap-supported-plugins/sen2cor/" class="external-link">sen2cor</a>.
+The data is made available via the <a href="https://stacindex.org/catalogs/earth-search#/" class="external-link">Earth Search</a>
+STAC API from AWS. <code>mapme.vegetation</code> can be used to query
+the server for a given spatio-temporal extent of interest and download
+matching results. S2 download from AWS is free of cost and does not
+require a user account. However, users should be aware that there is a
+maximum of 500 items per query. In case the spatio-temporal extent will
+lead to more items it is up to the user to split up the query into
+suitable chunks. The package allows for querying the data without a
+direct download in order to check the items returned.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span>
-
-<span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>
-<span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-
-<span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                      before <span class="op">=</span> <span class="st">"2017-07-31"</span>, 
-                      timeframe <span class="op">=</span> <span class="st">"full"</span>, 
-                      max.cloud <span class="op">=</span> <span class="fl">40</span>, 
-                      query_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; STAC version: 1.0.0-beta.2</span>
-<span class="co">#&gt; Querying data for temporal window 2017-05-01/2017-07-31</span>
-<span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span>
-<span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 11</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">features</span> (11 item(s) / 0 not fetched):</span>
-<span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170712_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20170707_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170702_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170622_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170612_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span>
-<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">other field(s):</span> </span>
-<span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span></code></pre></div>
-<p>The query resulted in 11 items matching the spatio-temporal extent with a maximum cloud cover of 40%. We can proceed downloading the data by setting <code>query_only = FALSE</code> and supply additional arguments of where to write the files</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mapme.vegetation</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span></span>
+<span><span class="va">aoi</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"exp_region_wgs.gpkg"</span>, package <span class="op">=</span> <span class="st">"mapme.vegetation"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">bbox</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span></span>
+<span><span class="va">rundir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"mapme.vegetation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">rundir</span>, showWarnings <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                      before <span class="op">=</span> <span class="st">"2017-07-31"</span>, </span>
+<span>                      timeframe <span class="op">=</span> <span class="st">"full"</span>, </span>
+<span>                      max.cloud <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>                      query_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; STAC version: 1.0.0-beta.2</span></span>
+<span><span class="co">#&gt; Querying data for temporal window 2017-05-01/2017-07-31</span></span>
+<span><span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 11</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (11 item(s) / 0 not fetched):</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170712_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170707_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170702_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170622_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170612_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
+<span><span class="co">#&gt; AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
+<span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</span></span></code></pre></div>
+<p>The query resulted in 11 items matching the spatio-temporal extent
+with a maximum cloud cover of 40%. We can proceed downloading the data
+by setting <code>query_only = FALSE</code> and supply additional
+arguments of where to write the files</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                     after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                     before <span class="op">=</span> <span class="st">"2017-07-31"</span>, 
-                     timeframe <span class="op">=</span> <span class="st">"full"</span>, 
-                     max.cloud <span class="op">=</span> <span class="fl">40</span>, 
-                     outdir <span class="op">=</span> <span class="va">rundir</span>, 
-                     query_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>The above call with download the data sequentially. As a alternative <code>mapme.vegetation</code> allows to download the data via the <a href="https://aria2.github.io/" class="external-link">aria2</a> download utility. User’s have to install the program manually on their machine and indicate the path to the aria2 binary. Additionall arguments are required to specify how many connections to the server should be established to download matching items in parallel. The function call below will download 4 items in parallel with a total of 4 connections per file to further speed up the download. Also, the retry argument can be set to specify the number of time the the function will retry to download items for which the download failed.</p>
+<code class="sourceCode R"><span><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                     after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                     before <span class="op">=</span> <span class="st">"2017-07-31"</span>, </span>
+<span>                     timeframe <span class="op">=</span> <span class="st">"full"</span>, </span>
+<span>                     max.cloud <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>                     outdir <span class="op">=</span> <span class="va">rundir</span>, </span>
+<span>                     query_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>The above call with download the data sequentially. As a alternative
+<code>mapme.vegetation</code> allows to download the data via the <a href="https://aria2.github.io/" class="external-link">aria2</a> download utility. User’s have
+to install the program manually on their machine and indicate the path
+to the aria2 binary. Additionall arguments are required to specify how
+many connections to the server should be established to download
+matching items in parallel. The function call below will download 4
+items in parallel with a total of 4 connections per file to further
+speed up the download. Also, the retry argument can be set to specify
+the number of time the the function will retry to download items for
+which the download failed.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                     after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                     before <span class="op">=</span> <span class="st">"2017-07-30"</span>, 
-                     timeframe <span class="op">=</span> <span class="st">"full"</span>, 
-                     max.cloud <span class="op">=</span> <span class="fl">40</span>, 
-                     outdir <span class="op">=</span> <span class="va">rundir</span>, 
-                     query_only <span class="op">=</span> <span class="cn">FALSE</span>,
-                     use_aria <span class="op">=</span> <span class="cn">T</span>,
-                     aria_bin <span class="op">=</span> <span class="st">"/usr/bin/aria2c"</span>, 
-                     max_concurrent <span class="op">=</span> <span class="fl">4</span>, 
-                     max_connections <span class="op">=</span> <span class="fl">4</span>,
-                     retry <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p>Note that in the above function calls <code>timeframe = "full"</code>. This way, the function will download all the matching items between the <code>after</code> and <code>before</code> dates (inclusive). If you want to request only specific months but across years specify <code>timeframe = "seasonal"</code> to loop over the years and download the matching time period. Note that the items are returned as a list with each object representing one of the queried years.</p>
+<code class="sourceCode R"><span><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                     after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                     before <span class="op">=</span> <span class="st">"2017-07-30"</span>, </span>
+<span>                     timeframe <span class="op">=</span> <span class="st">"full"</span>, </span>
+<span>                     max.cloud <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>                     outdir <span class="op">=</span> <span class="va">rundir</span>, </span>
+<span>                     query_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                     use_aria <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>                     aria_bin <span class="op">=</span> <span class="st">"/usr/bin/aria2c"</span>, </span>
+<span>                     max_concurrent <span class="op">=</span> <span class="fl">4</span>, </span>
+<span>                     max_connections <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                     retry <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>Note that in the above function calls
+<code>timeframe = "full"</code>. This way, the function will download
+all the matching items between the <code>after</code> and
+<code>before</code> dates (inclusive). If you want to request only
+specific months but across years specify
+<code>timeframe = "seasonal"</code> to loop over the years and download
+the matching time period. Note that the items are returned as a list
+with each object representing one of the queried years.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                      before <span class="op">=</span> <span class="st">"2020-07-30"</span>, 
-                      timeframe <span class="op">=</span> <span class="st">"seasonal"</span>, 
-                      max.cloud <span class="op">=</span> <span class="fl">40</span>, 
-                      query_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; STAC version: 1.0.0-beta.2</span>
-<span class="co">#&gt; Querying data for temporal window 2017-05-01/2017-07-30</span>
-<span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span>
-<span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 11</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">features</span> (11 item(s) / 0 not fetched):</span>
-<span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170712_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20170707_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170702_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170622_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170612_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span>
-<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">other field(s):</span> </span>
-<span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
-<span class="co">#&gt; Querying data for temporal window 2018-05-01/2018-07-30</span>
-<span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span>
-<span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 17</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">features</span> (17 item(s) / 0 not fetched):</span>
-<span class="co">#&gt;   - S2A_38PLR_20180727_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180722_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180717_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180712_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180707_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180702_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180627_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180622_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180617_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180612_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180607_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180602_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180528_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180523_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180513_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20180508_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20180503_0_L2A</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span>
-<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">other field(s):</span> </span>
-<span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
-<span class="co">#&gt; Querying data for temporal window 2019-05-01/2019-07-30</span>
-<span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span>
-<span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 17</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">features</span> (17 item(s) / 0 not fetched):</span>
-<span class="co">#&gt;   - S2B_38PLR_20190727_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190722_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190717_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190707_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190702_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190627_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190622_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190617_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190612_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190607_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190528_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190523_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190518_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190513_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190508_1_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20190508_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20190503_0_L2A</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span>
-<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">other field(s):</span> </span>
-<span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span>
-<span class="co">#&gt; Querying data for temporal window 2020-05-01/2020-07-30</span>
-<span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span>
-<span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span>
-<span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 10</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 0 not fetched):</span>
-<span class="co">#&gt;   - S2B_38PLR_20200711_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20200706_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20200701_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20200626_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20200621_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20200616_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20200527_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20200522_0_L2A</span>
-<span class="co">#&gt;   - S2A_38PLR_20200517_0_L2A</span>
-<span class="co">#&gt;   - S2B_38PLR_20200512_0_L2A</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span>
-<span class="co">#&gt; thumbnail, overview, info, metadata, visual, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B11, B12, AOT, WVP, SCL</span>
-<span class="co">#&gt; - <span style="font-weight: bold;">other field(s):</span> </span>
-<span class="co">#&gt; type, stac_version, stac_extensions, context, numberMatched, numberReturned, features, links</span></code></pre></div>
-<p>If you are only interested in specific bands you can reduce the files to download by specyfing the assets you wish to download.</p>
+<code class="sourceCode R"><span><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                      before <span class="op">=</span> <span class="st">"2020-07-30"</span>, </span>
+<span>                      timeframe <span class="op">=</span> <span class="st">"seasonal"</span>, </span>
+<span>                      max.cloud <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>                      query_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; STAC version: 1.0.0-beta.2</span></span>
+<span><span class="co">#&gt; Querying data for temporal window 2017-05-01/2017-07-30</span></span>
+<span><span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 11</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (11 item(s) / 0 not fetched):</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170727_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170722_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170717_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170712_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20170707_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170702_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170622_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170612_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170602_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170523_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20170503_0_L2A</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
+<span><span class="co">#&gt; AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
+<span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</span></span>
+<span><span class="co">#&gt; Querying data for temporal window 2018-05-01/2018-07-30</span></span>
+<span><span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 17</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (17 item(s) / 0 not fetched):</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180727_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180722_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180717_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180712_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180707_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180702_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180627_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180622_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180617_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180612_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180607_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180602_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180528_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180523_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180513_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20180508_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20180503_0_L2A</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
+<span><span class="co">#&gt; AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
+<span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</span></span>
+<span><span class="co">#&gt; Querying data for temporal window 2019-05-01/2019-07-30</span></span>
+<span><span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 17</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (17 item(s) / 0 not fetched):</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190727_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190722_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190717_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190707_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190702_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190627_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190622_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190617_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190612_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190607_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190528_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190523_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190518_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190513_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190508_1_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20190508_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20190503_0_L2A</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
+<span><span class="co">#&gt; AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
+<span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</span></span>
+<span><span class="co">#&gt; Querying data for temporal window 2020-05-01/2020-07-30</span></span>
+<span><span class="co">#&gt; The following items matched the specified spatiotemporal extent.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">matched feature(s):</span> 10</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (10 item(s) / 0 not fetched):</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20200711_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20200706_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20200701_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20200626_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20200621_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20200616_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20200527_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20200522_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2A_38PLR_20200517_0_L2A</span></span>
+<span><span class="co">#&gt;   - S2B_38PLR_20200512_0_L2A</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
+<span><span class="co">#&gt; AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">item's fields:</span> </span></span>
+<span><span class="co">#&gt; assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</span></span></code></pre></div>
+<p>If you are only interested in specific bands you can reduce the files
+to download by specyfing the assets you wish to download.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, 
-                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, 
-                      before <span class="op">=</span> <span class="st">"2017-07-30"</span>, 
-                      timeframe <span class="op">=</span> <span class="st">"full"</span>, 
-                      assets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B04"</span>, <span class="st">"B08"</span>, <span class="st">"SCL"</span><span class="op">)</span>,
-                      max.cloud <span class="op">=</span> <span class="fl">40</span>, 
-                      query_only <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">items</span> <span class="op">=</span> <span class="fu"><a href="../reference/download_aws.html">download_aws</a></span><span class="op">(</span>bbox <span class="op">=</span> <span class="va">bbox</span>, </span>
+<span>                      after <span class="op">=</span> <span class="st">"2017-05-01"</span>, </span>
+<span>                      before <span class="op">=</span> <span class="st">"2017-07-30"</span>, </span>
+<span>                      timeframe <span class="op">=</span> <span class="st">"full"</span>, </span>
+<span>                      assets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B04"</span>, <span class="st">"B08"</span>, <span class="st">"SCL"</span><span class="op">)</span>,</span>
+<span>                      max.cloud <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>                      query_only <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -298,7 +331,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

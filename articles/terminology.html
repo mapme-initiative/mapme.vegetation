@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -96,12 +96,13 @@
 
       
 
-      </header><script src="terminology_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Terminology</h1>
             
-            <h4 data-toc-skip class="date">Last modified: 2022-03-12</h4>
+            <h4 data-toc-skip class="date">Last modified:
+2023-02-10</h4>
       
       
       <div class="hidden name"><code>terminology.Rmd</code></div>
@@ -110,13 +111,44 @@
 
     
     
-<p>Here we present a quick introduction and the most important terminology used throughout this tutorial:</p>
+<p>Here we present a quick introduction and the most important
+terminology used throughout this tutorial:</p>
 <ul>
-<li><p>Surface Reflectance: The surface reflectance is is measured by satellites in different bands across the electromagnetic spectrum. Depending on the characteristics of a surface the spectral response for different bands changes. This information can be harnessed, e.g. to differentiate between different types of surfaces.</p></li>
-<li><p>Vegetation Index: A vegetation index usually is calculated by the inclusion of one or more surface reflectance bands from a remote sensing data. For example, the most well-known index, the normalized difference vegetation index (NDVI) considers the difference between the red (R) and near-infrared (NIR) bands following: <span class="math inline">\(\frac{(NIR-R)}{(NIR + R)}\)</span></p></li>
-<li><p>Sparse/Dense Time Series: A timeseries does have pre-defined time interval when observations are repeated. In a sparse timeseries a number of these regular interval observations are missing, e.g. in the case of Sentinel-2 data through cloud cover. By aggregating to a larger time-interval between observations we can derive a dense time series where each value is a composite value by the more fine-grained original observational data. To generate such a dense timeseries is the purpose of the pre-processing functionality of <code>{mapme.vegetation}</code></p></li>
-<li><p>Trend Analysis: This is the process of analyzing the behavior of a measurement through time. For example, in terms of VIs, we could be interested if the yearly maximum observed VI value increases from one year to another. In this case we would fit a linear trend model with the maximum VI as a dependent and time as an independent variable.</p></li>
-<li><p>Zonal Statistics: Satellite data usually comes in a raster format, that is regularly spaces grid cells covering the earth’s surface. Sometimes we might not be interested in a single one of these cells, but we are instead interested in an area covering multiple cells. An example would be an agricultural field potentially covering some hundreds of grid cells. To get information for the object of interest, that is the whole field, we need to spatially aggregate the information of the grid cells. This is achieved through zonal statistics, e.g.the calculation of the minimum, the average, and the maximum value of all pixels within a specific zone, i.e. a field in the example above.</p></li>
+<li><p>Surface Reflectance: The surface reflectance is is measured by
+satellites in different bands across the electromagnetic spectrum.
+Depending on the characteristics of a surface the spectral response for
+different bands changes. This information can be harnessed, e.g. to
+differentiate between different types of surfaces.</p></li>
+<li><p>Vegetation Index: A vegetation index usually is calculated by the
+inclusion of one or more surface reflectance bands from a remote sensing
+data. For example, the most well-known index, the normalized difference
+vegetation index (NDVI) considers the difference between the red (R) and
+near-infrared (NIR) bands following: <span class="math inline">\(\frac{(NIR-R)}{(NIR + R)}\)</span></p></li>
+<li><p>Sparse/Dense Time Series: A timeseries does have pre-defined time
+interval when observations are repeated. In a sparse timeseries a number
+of these regular interval observations are missing, e.g. in the case of
+Sentinel-2 data through cloud cover. By aggregating to a larger
+time-interval between observations we can derive a dense time series
+where each value is a composite value by the more fine-grained original
+observational data. To generate such a dense timeseries is the purpose
+of the pre-processing functionality of
+<code>{mapme.vegetation}</code></p></li>
+<li><p>Trend Analysis: This is the process of analyzing the behavior of
+a measurement through time. For example, in terms of VIs, we could be
+interested if the yearly maximum observed VI value increases from one
+year to another. In this case we would fit a linear trend model with the
+maximum VI as a dependent and time as an independent variable.</p></li>
+<li><p>Zonal Statistics: Satellite data usually comes in a raster
+format, that is regularly spaces grid cells covering the earth’s
+surface. Sometimes we might not be interested in a single one of these
+cells, but we are instead interested in an area covering multiple cells.
+An example would be an agricultural field potentially covering some
+hundreds of grid cells. To get information for the object of interest,
+that is the whole field, we need to spatially aggregate the information
+of the grid cells. This is achieved through zonal statistics, e.g.the
+calculation of the minimum, the average, and the maximum value of all
+pixels within a specific zone, i.e. a field in the example
+above.</p></li>
 </ul>
 </div>
 
@@ -135,7 +167,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

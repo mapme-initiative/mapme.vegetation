@@ -19,7 +19,7 @@ time series or seasonal periods between different years."><meta property="og:ima
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapme.vegetation</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9020</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ time series or seasonal periods between different years.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">.check_dates</span><span class="op">(</span><span class="va">after</span>, <span class="va">before</span>, <span class="va">timeframe</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.check_dates</span><span class="op">(</span><span class="va">after</span>, <span class="va">before</span>, <span class="va">timeframe</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -90,18 +90,25 @@ time series or seasonal periods between different years.</p>
     <dl><dt>after</dt>
 <dd><p>A length one character vector in the form `<!-- %Y-%m-%d` specifying -->
 the earliest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>before</dt>
 <dd><p>A length one character vector in the form `<!-- %Y-%m-%d` specifying -->
 the latest date (inclusive) included in the temporal extent.</p></dd>
+
+
 <dt>timeframe</dt>
 <dd><p>A length one character vector indicating whether the query
 should return the complete time series between `after` and `before` or
 if the query should be based on seasons. Possbile values are `full` and `seasonal`.
 Defaults to `full`.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data-frame with one row for `timeframe = "full"` and multiple rows
+    
+
+<p>A data-frame with one row for `timeframe = "full"` and multiple rows
   depending on the number of years between `after` and `before` if `timeframe = "seasonal"`.</p>
     </div>
     <div id="author">
@@ -125,7 +132,7 @@ Defaults to `full`.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
