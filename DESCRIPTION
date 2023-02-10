@@ -1,12 +1,12 @@
 Package: mapme.vegetation
 Title: Tool chain for Sentinel-2 L2A processing
-Version: 0.0.0.9010
+Version: 0.0.0.9020
 Authors@R: c(person(given = "Darius", 
                     family = "Görgen", 
                     role = c("cre", "aut"), 
                     email = "darius2402@web.de")
                     )
-Description: This package allows an easy access to Sentinel-2 Level 2A data
+Description: mapme.vegetation allows an easy access to Sentinel-2 Level 2A data
      from the freely available Amazon AWS bucket and subsequent processing based on the 
      the datacube framework provided by gdalcubes. A total number of 206 vegetation 
      indices as well as the surface reflectance values can be calculated for a 
@@ -20,10 +20,7 @@ LazyData: true
 Depends: R (>= 3.5)
 Imports: gdalcubes (>= 0.6),
          sf,
-         rgdal,
-         stars,
          stringr,
-         R.utils,
          dplyr,
          magrittr,
          rstac,
@@ -37,11 +34,12 @@ Imports: gdalcubes (>= 0.6),
          link2GI,
          rgrass7,
          snow
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     rmarkdown,
     ggplot2,
+    stars,
     tidyr,
     DiagrammeR,
     pkgdown
